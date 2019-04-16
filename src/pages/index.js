@@ -1,10 +1,20 @@
 import React from "react"
-import Header from "../components/header"
+import Layout from "../components/layout"
 
 export default () => (
-    <div style={{ color: `purple` }}>
-        <Header HeaderName="Welcome to Peter's blog!"/>
-        <p>What a world.</p>
+    <Layout>
+        <p>
+            Welcome!
+        </p>
+
+        <p>
+        My name is Peter. I enjoy building game related technologies and improving quality of people pipelines! 
+        </p>
+
+        <p>
+        Find out more about me through my projects experience and technical blog!
+        </p>
+
         <img src="https://source.unsplash.com/random/400x200" alt="" />  
-    </div>
+    </Layout>
 )

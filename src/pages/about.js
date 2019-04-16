@@ -1,9 +1,28 @@
 import React from "react"
-import Header from "../components/header"
+import Layout from "../components/layout"
 
 export default () => (
-  <div style={{ color: `teal` }}>
-    <Header HeaderName="About Peter Leontev"/>
-    <p>Generalist programmer passionated about building game technologies and improving quality of DDC pipelines</p>
-  </div>
+  <Layout>
+      <p>My name Is Peter.</p>
+      <p>I am generalist programmer passionated about building game technologies and improving quality of pipelines.</p>
+      <p>Besides tech I enjoy bouldering, roller skating, watching esport and playing computer games.</p>
+
+      <h4>Contacts:</h4>
+      <p>
+          <ul>
+            <li>
+            <a href="mailto:leontev.petr@gmail.com">Email</a>
+            </li>
+            <li>
+            <a href="https://www.linkedin.com/in/peter-leontev-67b34863/">LinkedIn</a>
+            </li>
+            <li>
+            <a href="https://twitter.com/PeterLeontev">Twitter</a>
+            </li>
+          </ul>
+          
+          
+          
+      </p>
+  </Layout>
 )
