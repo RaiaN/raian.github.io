@@ -1,23 +1,22 @@
 import React from "react"
 import { Link } from "gatsby"
+import ListLink from "../components/list_link"
+import ExternalLink from "../components/external_link"
 
-const ListLink = props => (
-    <li style={{ display: `inline-block`, marginRight: `1rem` }}>
-        <Link to={props.to}>{props.children}</Link> 
-    </li>
-)
 
-export default ({ children }) => (
-    <div style={{ margin: `3rem auto`, maxWidth: 650, padding: `0 1rem` }}>
+
+export default ({ children }) => 
+(
+    <div style={{ margin: `3rem auto`, maxWidth: 800, padding: `0 1rem` }}>
         <header style={{ marginBottom: `1.5rem` }}>
             <Link to="/" style={{ textShadow: `none`, backgroundImage: `none` }}>
-                <h3 style={{ display: `inline` }}>Peter Works</h3>
+                <h3 style={{ display: `inline` }}>Peter's work</h3>
             </Link>
             <ul style={{ listStyle: `none`, float: `right` }}>
                 <ListLink to="/about/">About</ListLink>
                 <ListLink to="/projects/">Projects</ListLink>
                 <ListLink to="/blog/">Blog</ListLink>
-                <ListLink to="https://google.ru">CV</ListLink>
+                <ExternalLink url="http://google.ru" url_name="CV"/>
             </ul>
         </header>
         {children}
