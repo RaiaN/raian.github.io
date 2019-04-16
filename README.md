@@ -1,1 +1,0 @@
-Peter Leontev personal website and blog
