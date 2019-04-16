@@ -4,7 +4,7 @@ import Layout from "../components/layout"
 export default () => (
   <Layout>
       <p>
-          There will be project list!
+          There will be blog!
       </p>
 
   </Layout>
