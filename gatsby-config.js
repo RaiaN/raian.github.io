@@ -1,6 +1,5 @@
 module.exports = {
   siteMetadata: {
-    title: `Peter website`,
     author: `Peter Leontev`,
     description: `Personal website and technical blog`,
     siteUrl: `https://raian.github.io`,
