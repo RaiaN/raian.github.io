@@ -1,5 +1,5 @@
 ---
-title: Handling invalid C++ pointers?
+title: Handling invalid C++ pointers
 date: "2019-04-19T16-00"
 description: In this article I will briefly explain approaches to check if a pointer is valid and why it is important.
 ---
