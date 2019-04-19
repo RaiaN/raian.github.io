@@ -13,7 +13,7 @@ export default () => (
         </p>
 
         <p>
-            You can learn more about me 
+            You can find out more about me 
             through my <Link style={{color: `#b25b05`}} to="/projects/">projects experience</Link> and <Link style={{color: `#b25b05`}} to="/blog/">technical blog</Link>.
         </p>
 
