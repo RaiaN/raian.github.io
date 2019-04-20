@@ -20,26 +20,18 @@ export default () => (
         <p>Besides tech I enjoy bouldering, roller skating, watching esport and playing computer games.</p>
 
         <h4>Contact me:</h4>
-        <p 
-            style={{
-            marginLeft: rhythm(1 / 2),
-            }}
-        >
-            <ul>
-                <li>
-                    <a style={{color: '#b25b05' }} href="mailto:leontev.petr@gmail.com">Email</a>
-                </li>
+        <ul style={{ marginLeft: rhythm(1 / 2) }}>
+            <li>
+                <a style={{color: '#b25b05' }} href="mailto:leontev.petr@gmail.com">Email</a>
+            </li>
 
-                <li>
-                    <a style={{color: '#b25b05' }} href="https://www.linkedin.com/in/peter-leontev-67b34863/">LinkedIn</a>
-                </li>
+            <li>
+                <a style={{color: '#b25b05' }} href="https://www.linkedin.com/in/peter-leontev-67b34863/">LinkedIn</a>
+            </li>
 
-                <li>
-                    <a style={{color: '#b25b05' }} href="https://twitter.com/PeterLeontev">Twitter</a>
-                </li>
-            </ul>               
-        </p>
-
-        
+            <li>
+                <a style={{color: '#b25b05' }} href="https://twitter.com/PeterLeontev">Twitter</a>
+            </li>
+        </ul> 
     </Layout>
 )
