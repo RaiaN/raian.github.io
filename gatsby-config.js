@@ -2,7 +2,7 @@ module.exports = {
   siteMetadata: {
     author: `Peter Leontev`,
     description: `Personal website and technical blog`,
-    siteUrl: `https://raian.github.io`,
+    siteUrl: `https://peterleontev.com`,
     social: {
       twitter: `PeterLeontev`,
     },
@@ -21,6 +21,13 @@ module.exports = {
       options: {
         path: `${__dirname}/content/assets`,
         name: `assets`,
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        path: `${__dirname}/content/images`,
+        name: `images`,
       },
     },
     {
@@ -53,12 +60,24 @@ module.exports = {
         //trackingId: `ADD YOUR TRACKING ID HERE`,
       },
     },
-    `gatsby-plugin-offline`,
     `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-plugin-typography`,
       options: {
         pathToConfigModule: `src/utils/typography`,
+      },
+    },
+    {
+      resolve: `gatsby-plugin-typescript`,
+      options: {
+        isTSX: true,
+        allExtensions: true
+      },
+    },
+    {
+      resolve: `gatsby-plugin-styled-jsx`,
+      options: {
+        jsxPlugins: ["styled-jsx-plugin-postcss"],
       },
     },
   ],
