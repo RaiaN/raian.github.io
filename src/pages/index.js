@@ -5,7 +5,7 @@ import { rhythm } from "../utils/typography"
 
 export default () => (
     <Layout>
-        <p>My name Is Peter.</p>
+        <p>My name is Peter.</p>
         
         <p>
             I am generalist programmer passionated about creating game technologies and improving quality of pipelines. 
