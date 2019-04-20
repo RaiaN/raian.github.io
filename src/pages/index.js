@@ -14,7 +14,7 @@ export default () => (
 
         <p>
             You can find out more about me 
-            through my <Link style={{color: `#b25b05`}} to="/projects/">work experience</Link> and <Link style={{color: `#b25b05`}} to="/blog/">technical blog</Link>.
+            through my <Link style={{color: `#b25b05`}} to="/work/">work experience</Link> and <Link style={{color: `#b25b05`}} to="/blog/">technical blog</Link>.
         </p>
 
         <p>Besides tech I enjoy bouldering, roller skating, watching esport and playing computer games.</p>

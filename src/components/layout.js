@@ -15,14 +15,13 @@ class Layout extends React.Component {
                         <h3 style={{ display: 'inline'}}>Peter Leontev </h3>
                     </Link>
                     <ul style={{ listStyle: `none`, float: `right` }}>
-                        <ListLink to="/">About</ListLink>
-                        <ListLink to="/projects/">Work</ListLink>
-                        <ListLink to="/blog/">Blog</ListLink>
+                        <ListLink to="/"><b>About</b></ListLink>
+                        <ListLink to="/work/"><b>Work</b></ListLink>
+                        <ListLink to="/blog/"><b>Blog</b></ListLink>
                         <ExternalLink url="http://google.ru" url_name="CV"/>
                     </ul>
                 </header>
                 {this.props.children}
-                <br></br>
             </div>
         )
     }

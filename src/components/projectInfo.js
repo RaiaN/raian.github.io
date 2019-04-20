@@ -4,31 +4,35 @@ import { Link } from "gatsby"
 const ProjectInfo = props => {
     return (
         <React.Fragment>
-            <Link to="/second" state={{img: props.item.l}} >
-                <div className="img-container">
-                    <img src={props.item.s} alt="" title="">
-                    </img>
-                </div>
-            </Link>
+            <div className="img-container">
+                <img src={props.item.s} alt="" title=""></img>
+                <p>
+                    Project name and description
+                </p>
+            </div>
             <style jsx>
             {`
                 .img-container {
-                    text-align: center;
-                    display: block;
-                }
-
-                .img-container::before {
-                    
+                    display: inline;
+                    float: left;
+                    width: 800px;
+                    border-top: 2px dashed;
+                    border-left: 2px dashed;
+                    border-right: 2px dashed;
+                    padding: 1px;
+                    border-size: 0.5px;
+                    margin-bottom: -27px;
+                    position: relative;
+                    top: 5%;
                 }
 
                 .img-container img {
-                    width: 50%;
-                    height: auto;
-                    margin: 0 !important;
+                    width: 200px;
                     border-radius: 10px;
-                    border: 1px solid gray;
                     transition: 0.2s ease-in-out;
                     z-index: 2;
+                    float: left;
+                    margin-right: 16px;
 
                     :hover {
                         opacity: 0.95;
