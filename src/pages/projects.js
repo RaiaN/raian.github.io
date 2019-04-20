@@ -10,15 +10,12 @@ class ProjectsComponent extends React.Component {
           "l": edge.node.childImageSharp.fluid.originalImg,
           "s": edge.node.childImageSharp.fixed.src
       }
-    })
-
-    console.log(projectsInfo);
+    });
 
     return (
         <Layout>
-            <div>
-                {projectsInfo.map((projectInfo, index) => <ProjectInfo key={index} item={projectInfo}/> )}
-            </div>
+            <br></br>
+            {projectsInfo.map((projectInfo, index) => <ProjectInfo key={index} item={projectInfo}/>)}
         </Layout>
     )
   }
@@ -44,7 +41,7 @@ export const projectsComponentQuery = graphql`
         {
           childImageSharp
           {
-            fixed(quality: 95, width: 300, height: 300) 
+            fixed(quality: 98, width: 400, height: 400) 
             {
               src
             }
