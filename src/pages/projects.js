@@ -17,7 +17,7 @@ class ProjectsComponent extends React.Component {
     return (
         <Layout>
             <div>
-                {projectsInfo.map((projectInfo, index) => <ProjectInfo item={projectInfo}/> )}
+                {projectsInfo.map((projectInfo, index) => <ProjectInfo key={index} item={projectInfo}/> )}
             </div>
         </Layout>
     )

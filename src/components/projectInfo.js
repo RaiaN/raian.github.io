@@ -3,10 +3,9 @@ import { Link } from "gatsby"
 
 const ProjectInfo = props => {
     return (
-        <React.Fragment>
+        <React.Fragment >
             <div className="img-container" key={props.index}>
                 <Link to="/second" state={{img: props.item.l}}>
-                {}
                     <img
                         src={props.item.s}
                         alt=""
@@ -16,6 +15,7 @@ const ProjectInfo = props => {
             </div>
             <style jsx>
                 {`
+
                     .img-container {
                         position: relative;
                         width: 50%;
