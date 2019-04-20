@@ -1,9 +1,10 @@
 import React from "react"
 import { Link } from "gatsby"
-import BlogLayout from "../components/blog_layout"
+import BlogLayout from "../components/blogLayout"
+import Layout from "../components/layout"
 import SEO from "../components/seo"
 import { rhythm } from "../utils/typography"
-import Layout from "../components/layout"
+
 
 export default props =>
 (

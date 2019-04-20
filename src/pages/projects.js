@@ -1,25 +1,25 @@
 import React from "react"
 import Layout from "../components/layout"
 import { graphql } from 'gatsby'
-import PaginatedPageTemplate from "../templates/paginatedPageTemplate"
-
-const path = require(`path`)
+import ProjectInfo from "../components/projectInfo"
 
 class ProjectsComponent extends React.Component {
   render() {
     const projectsInfo = this.props.data.images.edges.map(edge => {
       return {
-          "large": edge.node.childImageSharp.fluid.originalImg,
-          "small": edge.node.childImageSharp.fixed.src
+          "l": edge.node.childImageSharp.fluid.originalImg,
+          "s": edge.node.childImageSharp.fixed.src
       }
     })
 
-    const Projects = projectsInfo.map(projectInfo => <PaginatedPageTemplate key={projectInfo.node.id} post={projectInfo.node} />)
+    console.log(projectsInfo);
 
     return (
-      <Layout>
-          {Projects} 
-      </Layout>
+        <Layout>
+            <div>
+                {projectsInfo.map((projectInfo, index) => <ProjectInfo item={projectInfo}/> )}
+            </div>
+        </Layout>
     )
   }
 }
