@@ -18,6 +18,7 @@ exports.createPages = ({ graphql, actions }) => {
                 slug
               }
               frontmatter {
+                date
                 title
               }
             }
@@ -43,7 +44,7 @@ exports.createPages = ({ graphql, actions }) => {
         context: {
           slug: post.node.fields.slug,
           previous,
-          next,
+          next
         },
       })
     })

@@ -1,7 +1,7 @@
 ---
 title: Technical blog in 202312319?
 date: "2019-04-19T15-00"
-description: YEAH YEAH YEAH
+description: Really?
 ---
 
 Why would someone need a technical blog in 2019? Everything is written, everything is said, you say.
