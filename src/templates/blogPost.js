@@ -19,7 +19,7 @@ class BlogPostTemplate extends React.Component {
             title={post.frontmatter.title}
             description={post.frontmatter.description || post.excerpt}
           />
-          <h3 style={{marginBottom: 0}}><i>{post.frontmatter.title}</i></h3>
+          <h3 style={{marginBottom: 0, marginTop: 0}}><i>{post.frontmatter.title}</i></h3>
           <p
             style={{
               ...scale(-1 / 5),
@@ -37,30 +37,33 @@ class BlogPostTemplate extends React.Component {
             }}
           />
 
-          <ul
-            style={{
-              display: `flex`,
-              flexWrap: `wrap`,
-              justifyContent: `space-between`,
-              listStyle: `none`,
-              padding: 0,
-            }}
-          >
-            <li>
-              {previous && (
-                <Link to={previous.fields.slug} rel="prev">
-                  ← <i>{previous.frontmatter.title}</i>
-                </Link>
-              )}
-            </li>
-            <li>
-              {next && (
-                <Link to={next.fields.slug} rel="next">
-                  <i>{next.frontmatter.title}</i> →
-                </Link>
-              )}
-            </li>
-          </ul>
+          <div>
+            <ul
+              style={{
+                display: `flex`,
+                flexWrap: `wrap`,
+                justifyContent: `space-between`,
+                listStyle: `none`,
+                padding: 0,
+                marginLeft: 0
+              }}
+            >
+              <li>
+                {previous && (
+                  <Link to={previous.fields.slug} rel="prev">
+                    ← <i>{previous.frontmatter.title}</i>
+                  </Link>
+                )}
+              </li>
+              <li>
+                {next && (
+                  <Link to={next.fields.slug} rel="next">
+                    <i>{next.frontmatter.title}</i> →
+                  </Link>
+                )}
+              </li>
+            </ul>
+          </div>
         </BlogLayout>
       </Layout>
     )
