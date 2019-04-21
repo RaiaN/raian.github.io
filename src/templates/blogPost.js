@@ -33,7 +33,17 @@ class BlogPostTemplate extends React.Component {
           >
             {post.frontmatter.date}
           </p>
-          <div dangerouslySetInnerHTML={{ __html: post.html }} />
+          <React.Fragment>
+              <div dangerouslySetInnerHTML={{ __html: post.html }} />
+              <style jsx>
+              {`
+                  :global(pre) {
+                    background: #dddddd;
+                  }
+              `}
+              </style>
+          </React.Fragment>
+          
           <hr
             style={{
               marginBottom: rhythm(1),
