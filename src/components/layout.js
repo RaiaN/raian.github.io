@@ -17,7 +17,7 @@ class Layout extends React.Component {
                         </Link>
                         <ul className="navigation">
                             <ListLink to="/"><b>About</b></ListLink>
-                            <ListLink to="/projects/"><b>Projects</b></ListLink>
+                            <ListLink to="/projects/"><b>Work</b></ListLink>
                             <ListLink to="/blog/"><b>Blog</b></ListLink>
                             <ExternalLink url="http://google.ru" url_name="CV"/>
                         </ul>

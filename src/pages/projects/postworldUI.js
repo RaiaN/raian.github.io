@@ -9,7 +9,6 @@ class PostworldUIProject extends React.Component {
       <Layout>
           <BlogLayout>
               <h3 style={{marginBottom: 0, marginTop: 0}}><i>POSTWORLD UMG UI</i></h3>
-          
           </BlogLayout>
       </Layout>
     )

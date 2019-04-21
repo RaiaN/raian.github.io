@@ -9,7 +9,7 @@ class ProjectsComponent extends React.Component {
   render() {
     return (
         <Layout>
-            <h3 style={{ margin: 0, marginBottom: 16 }}>Projects</h3>
+            <h3 style={{ margin: 0, marginBottom: 16 }}>Work</h3>
             
             <ProjectInfo
                 image={procedural_generation_img}
