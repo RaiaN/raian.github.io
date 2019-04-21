@@ -9,7 +9,9 @@ import { rhythm } from "../utils/typography"
 export default props =>
 (
   <Layout>
-    <h3 style={{margin: 0, marginBottom: 16 }}>Blog</h3>
+    <Link to="/blog/">
+      <h3 style={{margin: 0, marginBottom: 16 }}>Blog</h3>
+    </Link>
     <BlogLayout location={props.location}>
       <SEO
         title="All posts"
