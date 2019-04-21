@@ -1,6 +1,6 @@
 ---
 title: Technical blog in 2019?
-date: "2019-04-19T15-00"
+date: "2019-04-21T19-00"
 description: Really?
 ---
 
