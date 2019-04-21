@@ -19,7 +19,7 @@ class ProjectsComponent extends React.Component {
             />
             <ProjectInfo
                 image={pw_inventory_img}
-                name="POSTWORLD UI"
+                name="POSTWORLD UMG UI"
                 descr="POSTWORLD is Hardcore Action RPG that has a quite complex UI and here you may learn more about how it was built."
                 page="/projects/postworldUI/"
             />
