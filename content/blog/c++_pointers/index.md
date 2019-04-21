@@ -5,7 +5,6 @@ description: In this article I will briefly explain approaches to check if a poi
 ---
 
 Imagine the following situation in Unreal Engine 4 gameplay code:
-
 ```cpp
 APlayer::OnAttacked()
 {
@@ -77,16 +76,18 @@ Solution is to divide pointer checks into "soft" and "hard" ones. Soft check is 
 
 In our case we need "hard" check of SoundSystem pointer because otherwise that means something is totally wrong with game systems initialization process.
 
-How to do "hard" checks in Unreal Engine 4 C++? 
-
-There are many ways according to official documentation, https://docs.unrealengine.com/en-us/Programming/Assertions:
+How to do "hard" checks in Unreal Engine 4 C++? There are many ways according to official [documentation](https://www.google.comhttps://docs.unrealengine.com/en-us/Programming):
+```
 * check
 * checkf
 * verify
 * verifyf
+* checkSlow
+* checkfSlow
+* verifySlow
+```
 
-basically everything that halt the execution of the program.
-
+Any of above macroses will halt the execution of the program and that is exactly what we need! 
 
 Result:
 ```cpp
@@ -98,6 +99,5 @@ APlayer::OnAttacked()
     SoundSystem->PlaySoundCue(OnAttackedSoundCue);
 }
 ```
-
 
 Happy reading!
