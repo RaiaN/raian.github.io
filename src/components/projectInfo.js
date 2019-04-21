@@ -66,13 +66,13 @@ const ProjectInfo = props => {
                     .img-container img
                     {
                         margin-left: 0px;
-                        width: 99%;
+                        width: 100%;
                         float: none;
                     }
                     .img-container p
                     {
                         margin-left: 0px;
-                        width: 99%;
+                        width: 100%;
                     }
                 }
             `}
