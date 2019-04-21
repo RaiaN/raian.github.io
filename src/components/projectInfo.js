@@ -22,14 +22,15 @@ const ProjectInfo = props => {
                     border-left: 2px dotted;
                     border-right: 2px dotted;
                     border-bottom: 2px dotted;
+                    border-radius: 6px;
                     padding: 0px;
                     margin-top: 0px;
                     margin-bottom: 1px;
                 }
 
                 .img-container img {
-                    width: 300px;
-                    height: 300px;
+                    width: 250px;
+                    height: 250px;
                     border-radius: 10px;
                     transition: 0.2s ease-in-out;
                     z-index: 2;
