@@ -17,7 +17,8 @@ const ProjectInfo = props => {
                 .img-container {
                     display: inline;
                     float: left;
-                    width: 800px;
+                    width: 100%;
+                    height: auto;
                     border-top: 2px dotted;
                     border-left: 2px dotted;
                     border-right: 2px dotted;
@@ -26,11 +27,12 @@ const ProjectInfo = props => {
                     padding: 0px;
                     margin-top: 0px;
                     margin-bottom: 1px;
+                    margin-right: 1px;
                 }
 
                 .img-container img {
-                    width: 250px;
-                    height: 250px;
+                    width: 40%;
+                    height: auto;
                     border-radius: 10px;
                     transition: 0.2s ease-in-out;
                     z-index: 2;
@@ -47,10 +49,31 @@ const ProjectInfo = props => {
                 }
 
                 .img-container p {
-                    margin-right: 0px;
+                    margin-right: 1px;
                     margin-left: 8px;
                     margin-top: 4px;
                     margin-bottom: 4px;
+                }
+
+                @media (max-width: 600px)
+                {
+                    .img-container
+                    {
+                        margin-left: 0px;
+                        padding: 5px;
+                    }
+
+                    .img-container img
+                    {
+                        margin-left: 0px;
+                        width: 99%;
+                        float: none;
+                    }
+                    .img-container p
+                    {
+                        margin-left: 0px;
+                        width: 99%;
+                    }
                 }
             `}
             </style>

@@ -30,7 +30,7 @@ class Layout extends React.Component {
                 {`
                     .layout-container
                     {
-                        margin: 3rem auto;
+                        margin: 2rem auto;
                         max-width: 800px;
                         padding: 1rem;
                     }
@@ -50,7 +50,8 @@ class Layout extends React.Component {
                     .navigation
                     {
                         float: right;
-                        margin-bottom: 0px;
+                        margin-bottom: 0;
+                        display: inline-block;
                     }
 
                     .layout-content

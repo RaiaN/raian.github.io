@@ -2,7 +2,28 @@ import React from "react"
 
 export default props => 
 (
-    <li style={{ display: `inline-block`, marginRight: `1rem` }}>
-        <a href={props.url}><b>{props.url_name}</b></a>
-    </li>
+    <React.Fragment>
+        <li>
+            <a href={props.url}><b>{props.url_name}</b></a>
+        </li>
+        <style jsx>
+        {`
+            li {
+                display: inline-block;
+                margin-right: 0em;
+                margin-left: 1em;
+            }
+
+            @media (max-width: 500px) 
+            {
+                li {
+                    display: inline-block;
+                    margin-right: 1em;
+                    margin-left: 0em;
+                }
+            }
+            
+        `}
+        </style>
+    </React.Fragment>
 )
