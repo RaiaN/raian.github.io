@@ -5,6 +5,7 @@ import { rhythm } from "../utils/typography"
 
 export default () => (
     <Layout>
+        <h3 style={{margin: 0, marginBottom: 16 }}>About</h3>
         <p>
             I am generalist programmer passionated about creating game technologies and improving quality of pipelines. 
             These days I mostly work with Unreal Engine, C++ and Python.

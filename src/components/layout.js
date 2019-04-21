@@ -34,7 +34,7 @@ class Layout extends React.Component {
                     .layout-container
                     {
                         margin: 2rem auto;
-                        max-width: 800px;
+                        max-width: 900px;
                         padding: 1rem;
                     }
 

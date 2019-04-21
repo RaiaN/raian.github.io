@@ -2,17 +2,27 @@ import React from "react"
 import Layout from "../components/layout"
 import ProjectInfo from "../components/projectInfo"
 
-import project_1_image_url from "../../content/images/1.jpeg"
-import project_2_image_url from "../../content/images/2.jpeg"
-
+import pw_inventory_img from "../../content/images/pw_inventory.jpg"
+import procedural_generation_img from "../../content/images/procedural_generation.jpg"
 
 class ProjectsComponent extends React.Component {
   render() {
     return (
         <Layout>
-            <ProjectInfo image_url={project_1_image_url} description="Project 1 name and de Project 1 name and descriptionect 1 name and descr 1 1 Projiption 1 Project 1 name and  1Project 1 name and descripscription tiondescription 1 Project 1 name and description 1"/>
-            <ProjectInfo image_url={project_2_image_url} description="Project 2 name and description 2 maybe"/>
-            <ProjectInfo image_url={project_1_image_url} description="Project 3 and no description"/>
+            <h3 style={{ margin: 0, marginBottom: 16 }}>Projects</h3>
+            
+            <ProjectInfo
+                image={procedural_generation_img}
+                name="Procedural terrain generation via Unreal Engine 4"
+                descr="Making procedural terrain is hard. Even harder is to texture it right."
+                page="/projects/proceduralGeneration/"
+            />
+            <ProjectInfo
+                image={pw_inventory_img}
+                name="POSTWORLD UI"
+                descr="POSTWORLD is Hardcore Action RPG that has a quite complex UI and here you may learn more about how it was built."
+                page="/projects/postworldUI/"
+            />
         </Layout>
     )
   }

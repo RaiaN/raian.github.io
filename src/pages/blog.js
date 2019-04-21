@@ -9,6 +9,7 @@ import { rhythm } from "../utils/typography"
 export default props =>
 (
   <Layout>
+    <h3 style={{margin: 0, marginBottom: 16 }}>Blog</h3>
     <BlogLayout location={props.location}>
       <SEO
         title="All posts"
@@ -18,7 +19,7 @@ export default props =>
         const title = node.frontmatter.title || node.fields.slug
         return (
           <div key={node.fields.slug}>
-            <h3
+            <h4
               style={{
                 marginBottom: rhythm(1 / 4),
                 marginTop: 0
@@ -27,7 +28,7 @@ export default props =>
               <Link style={{ boxShadow: `none` }} to={node.fields.slug}>
                 {title}
               </Link>
-            </h3>
+            </h4>
             <small>{node.frontmatter.date}</small>
             <p
               dangerouslySetInnerHTML={{

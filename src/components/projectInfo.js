@@ -5,8 +5,8 @@ const ProjectInfo = props => {
     return (
         <React.Fragment>
             <div className="img-container">
-                <Link to="/blog/">
-                    <img src={props.image_url} alt="" title=""></img>
+                <Link to={props.page}>
+                    <img src={props.image} alt="" title=""></img>
                 </Link>
                 <p>
                     <b>{props.name}</b>
@@ -48,7 +48,7 @@ const ProjectInfo = props => {
 
                     :hover {
                         opacity: 0.95;
-                        transform: scale(1.01);
+                        transform: scale(1.03);
                     }
                 }
 

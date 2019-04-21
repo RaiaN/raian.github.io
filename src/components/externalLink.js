@@ -4,7 +4,7 @@ export default props =>
 (
     <React.Fragment>
         <li>
-            <a href={props.url}><b>{props.url_name}</b></a>
+            <a href={props.url} target="_blank" rel="noopener noreferrer"><b>{props.url_name}</b></a>
         </li>
         <style jsx>
         {`
