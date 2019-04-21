@@ -9,7 +9,11 @@ const ProjectInfo = props => {
                     <img src={props.image_url} alt="" title=""></img>
                 </Link>
                 <p>
-                    {props.description}
+                    <b>{props.name}</b>
+                    
+                </p>
+                <p>
+                    {props.descr}
                 </p>
             </div>
             <style jsx>
