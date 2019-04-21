@@ -6,8 +6,8 @@ description: Really?
 
 Why would someone need a technical blog in 2019? Everything is written, everything is said, you say.
 
-I think this place is especially usefull when I am digging into fields of programming that I am not familiar with and want to try out some R&D.
+I think this place will be especially usefull when I decide to try out some programming R&D with undefined result.
 
-I will start this blog with series of articles about Unreal Engine 4 and C++ in the game development context. Reason is simple: these are the technologies I work with most often nowadays. 
+I will start this blog with series of articles about Unreal Engine 4 and C++ in the context of game development. Reason is simple: these are the technologies I work with most often nowadays. 
 
 Happy reading!

@@ -59,7 +59,7 @@ class Layout extends React.Component {
 
                     .layout-content
                     {
-                        margin-top: 2em;
+                        margin-top: 2.5em;
                     }
 
                     @media (max-width: 500px) 

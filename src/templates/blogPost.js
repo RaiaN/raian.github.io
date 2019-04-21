@@ -19,13 +19,13 @@ class BlogPostTemplate extends React.Component {
             title={post.frontmatter.title}
             description={post.frontmatter.description || post.excerpt}
           />
-          <h3><i>{post.frontmatter.title}</i></h3>
+          <h3 style={{marginBottom: 0}}><i>{post.frontmatter.title}</i></h3>
           <p
             style={{
               ...scale(-1 / 5),
               display: `block`,
-              marginBottom: rhythm(1),
-              marginTop: rhythm(-1),
+              marginBottom: rhythm(1/3),
+              marginTop: 0,
             }}
           >
             {post.frontmatter.date}
