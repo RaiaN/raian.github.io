@@ -6,10 +6,10 @@ const ProjectInfo = props => {
         <React.Fragment>
             <div className="img-container">
                 <Link to="/blog/">
-                    <img src={props.item.s} alt="" title=""></img>
+                    <img src={props.image_url} alt="" title=""></img>
                 </Link>
                 <p>
-                    Project name and description
+                    {props.description}
                 </p>
             </div>
             <style jsx>
@@ -28,7 +28,8 @@ const ProjectInfo = props => {
                 }
 
                 .img-container img {
-                    width: 200px;
+                    width: 300px;
+                    height: 300px;
                     border-radius: 10px;
                     transition: 0.2s ease-in-out;
                     z-index: 2;
