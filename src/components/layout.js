@@ -11,7 +11,7 @@ class Layout extends React.Component {
         return (
             <React.Fragment>
                 <div className="layout-container">
-                    <div className="layout-header">
+                    <header className="layout-header">
                         <Link to="/">
                             <h3 className="author">Peter Leontev </h3>
                         </Link>
@@ -21,10 +21,13 @@ class Layout extends React.Component {
                             <ListLink to="/blog/"><b>Blog</b></ListLink>
                             <ExternalLink url="http://google.ru" url_name="CV"/>
                         </ul>
-                    </div>
+                    </header>
                     <div className="layout-content">
                         {this.props.children}
                     </div>
+                    <footer>
+                        <i>© 2019 Peter Leontev</i>
+                    </footer>
                 </div>
                 <style jsx>
                 {`
