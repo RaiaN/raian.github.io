@@ -26,7 +26,7 @@ class Layout extends React.Component {
                         {this.props.children}
                     </div>
                     <footer>
-                        <i>© 2019 Peter Leontev</i>
+                        <i>© 2019 <Link to="/">Peter Leontev</Link></i>
                     </footer>
                 </div>
                 <style jsx>

@@ -2,8 +2,8 @@ import React from "react"
 import Layout from "../components/layout"
 import ProjectInfo from "../components/projectInfo"
 
-import pw_inventory_img from "../../content/images/pw_inventory.jpg"
 import procedural_generation_img from "../../content/images/procedural_generation.jpg"
+import pw_inventory_img from "../../content/images/postworld_ui.jpg"
 
 class ProjectsComponent extends React.Component {
   render() {
@@ -20,7 +20,7 @@ class ProjectsComponent extends React.Component {
             <ProjectInfo
                 image={pw_inventory_img}
                 name="POSTWORLD UMG UI"
-                descr="POSTWORLD is Hardcore Action RPG that has a quite complex UI and here you may learn more about how it was built."
+                descr="POSTWORLD UI built using UMG"
                 page="/projects/postworldUI/"
             />
         </Layout>
