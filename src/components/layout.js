@@ -2,8 +2,10 @@ import React from "react"
 import { Link } from "gatsby"
 import ListLink from "./listLink"
 import ExternalLink from "./externalLink"
+import { Helmet } from "react-helmet"
 import "./global.css"
 
+import favicon from "../../favicon.ico"
 import cv_pdf from "../../content/cv.pdf"
 
 
@@ -14,6 +16,10 @@ class Layout extends React.Component {
             <React.Fragment>
                 <div className="layout-container">
                     <header className="layout-header">
+                        <link rel="shortcut icon" href={favicon} />
+                        <Helmet>
+                            <title> Peter Leontev </title>
+                        </Helmet>
                         <Link to="/">
                             <h2 className="author">Peter Leontev </h2>
                         </Link>
