@@ -10,7 +10,7 @@ export default props =>
 (
   <Layout>
     <Link to="/blog/">
-      <h3 style={{margin: 0, marginBottom: 16 }}>Blog</h3>
+      <h3 style={{margin: 0, marginBottom: rhythm(2) }}>Blog</h3>
     </Link>
     <BlogLayout location={props.location}>
       <SEO
@@ -20,11 +20,11 @@ export default props =>
       {props.data.allMarkdownRemark.edges.map(({ node }) => {
         const title = node.frontmatter.title || node.fields.slug
         return (
-          <div key={node.fields.slug}>
+          <div key={node.fields.slug} style={{marginBottom: rhythm(2)}}>
             <h4
               style={{
-                marginBottom: rhythm(1 / 4),
-                marginTop: 0
+                  marginBottom: 7,
+                  marginTop: 0
               }}
             >
               <Link style={{ boxShadow: `none` }} to={node.fields.slug}>

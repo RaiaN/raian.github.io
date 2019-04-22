@@ -4,12 +4,13 @@ import ProjectInfo from "../components/projectInfo"
 
 import procedural_generation_img from "../../content/images/procedural_generation.jpg"
 import pw_inventory_img from "../../content/images/postworld_ui.jpg"
+import { rhythm } from "../utils/typography";
 
 class ProjectsComponent extends React.Component {
   render() {
     return (
         <Layout>
-            <h3 style={{ margin: 0, marginBottom: 16 }}>Work</h3>
+            <h3 style={{ margin: 0, marginBottom: rhythm(2) }}>Work</h3>
             
             <ProjectInfo
                 image={procedural_generation_img}

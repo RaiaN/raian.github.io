@@ -23,14 +23,14 @@ const ProjectInfo = props => {
                     float: left;
                     width: 100%;
                     height: auto;
-                    border-top: 2px dotted;
-                    border-left: 2px dotted;
-                    border-right: 2px dotted;
-                    border-bottom: 2px dotted;
+                    border-top: 2px dashed;
+                    border-left: 2px dashed;
+                    border-right: 2px dashed;
+                    border-bottom: 2px dashed;
                     border-radius: 6px;
                     padding: 0px;
                     margin-top: 0px;
-                    margin-bottom: 1px;
+                    margin-bottom: 25px;
                     margin-right: 1px;
                 }
 

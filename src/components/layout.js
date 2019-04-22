@@ -15,7 +15,7 @@ class Layout extends React.Component {
                 <div className="layout-container">
                     <header className="layout-header">
                         <Link to="/">
-                            <h3 className="author">Peter Leontev </h3>
+                            <h2 className="author">Peter Leontev </h2>
                         </Link>
                         <ul className="navigation">
                             <ListLink to="/"><b>About</b></ListLink>

@@ -2,10 +2,12 @@ module.exports = {
   siteMetadata: {
     author: `Peter Leontev`,
     description: `Personal website and technical blog`,
+    title: `Peter Leontev`,
     siteUrl: `https://peterleontev.com`,
     social: {
       twitter: `PeterLeontev`,
     },
+    
     
   },
   plugins: [
