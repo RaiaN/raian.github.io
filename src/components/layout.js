@@ -4,6 +4,8 @@ import ListLink from "./listLink"
 import ExternalLink from "./externalLink"
 import "./global.css"
 
+import cv_pdf from "../../content/cv.pdf"
+
 
 
 class Layout extends React.Component {
@@ -19,7 +21,7 @@ class Layout extends React.Component {
                             <ListLink to="/"><b>About</b></ListLink>
                             <ListLink to="/projects/"><b>Work</b></ListLink>
                             <ListLink to="/blog/"><b>Blog</b></ListLink>
-                            <ExternalLink url="http://google.ru" url_name="CV"/>
+                            <ExternalLink url={cv_pdf} url_name="CV"/>
                         </ul>
                     </header>
                     <div className="layout-content">
