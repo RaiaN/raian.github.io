@@ -5,7 +5,7 @@ import ExternalLink from "./externalLink"
 import { Helmet } from "react-helmet"
 import "./global.css"
 
-import favicon from "../../favicon.ico"
+import favicon from "../../favicon.png"
 import cv_pdf from "../../content/cv.pdf"
 
 
@@ -16,9 +16,9 @@ class Layout extends React.Component {
             <React.Fragment>
                 <div className="layout-container">
                     <header className="layout-header">
-                        <link rel="shortcut icon" href={favicon} />
                         <Helmet>
-                            <title> Peter Leontev </title>
+                            <title>Peter Leontev - Generalist Developer</title>
+                            <link rel="icon" type="image/png" href={favicon}/>
                         </Helmet>
                         <Link to="/">
                             <h2 className="author">Peter Leontev </h2>
