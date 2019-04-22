@@ -21,7 +21,7 @@ class Layout extends React.Component {
                             <link rel="icon" type="image/png" href={favicon}/>
                         </Helmet>
                         <Link to="/">
-                            <h2 className="author">Peter Leontev </h2>
+                            <h2 className="author">Peter Leontev</h2>
                         </Link>
                         <ul className="navigation">
                             <ListLink to="/"><b>About</b></ListLink>

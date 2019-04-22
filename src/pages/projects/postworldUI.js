@@ -6,6 +6,8 @@ import Layout from "../../components/layout"
 import postworld_ui_img from "../../../content/images/postworld_ui_large.jpg"
 import { rhythm } from "../../utils/typography";
 
+import "../../utils/li.css"
+
 class PostworldUIProject extends React.Component {
   render() {
     return (

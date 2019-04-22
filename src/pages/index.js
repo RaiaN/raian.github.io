@@ -3,6 +3,8 @@ import { Link } from "gatsby"
 import Layout from "../components/layout"
 import { rhythm } from "../utils/typography"
 
+import "../utils/li.css"
+
 export default () => (
     <Layout>
         <h3 style={{margin: 0, marginBottom: rhythm(2) }}>About</h3>
@@ -18,7 +20,7 @@ export default () => (
         <div>
             <ul style={{ listStylePosition: `inside` }}>
                 <li>
-                    <a style={{color: '#b25b05' }} href="mailto:leontev.petr@gmail.com">Email</a>
+                    <a style={{color: '#b25b05'}} href="mailto:leontev.petr@gmail.com">Email</a>
                 </li>
                 <li>
                     <a style={{color: '#b25b05' }} href="https://www.linkedin.com/in/peter-leontev-67b34863/">LinkedIn</a>

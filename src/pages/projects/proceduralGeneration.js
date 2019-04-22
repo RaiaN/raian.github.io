@@ -6,6 +6,8 @@ import Layout from "../../components/layout"
 import procedural_generation_img from "../../../content/images/procedural_generation_large.jpg"
 import { rhythm } from "../../utils/typography";
 
+import "../../utils/li.css"
+
 class PostworldUIProject extends React.Component {
   render() {
     return (
