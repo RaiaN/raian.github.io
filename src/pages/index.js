@@ -11,8 +11,7 @@ export default () => (
             These days I mostly work with Unreal Engine, C++ and Python.
         </p>
         <p>
-            You can find out more about me 
-            through my <Link style={{color: `#b25b05`}} to="/projects/">work</Link> and <Link style={{color: `#b25b05`}} to="/blog/">technical blog</Link>.
+            You can learn more about me through my <Link style={{color: `#b25b05`}} to="/projects/">work</Link> and <Link style={{color: `#b25b05`}} to="/blog/">technical blog</Link>.
         </p>
         <p>Besides tech I enjoy bouldering, roller skating, watching esport and playing computer games.</p>
         <b>Contact me:</b>
