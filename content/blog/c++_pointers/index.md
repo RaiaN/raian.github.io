@@ -17,11 +17,11 @@ APlayer::OnAttacked()
 ```
 
 
-**SoundSystem** can be invalid but what does that mean? Is is OK situation to just use IsValid() and do nothing otherwise? This issue is more interesting that it seems.
+**SoundSystem** can be invalid but what does that mean? Is it OK situation to just use IsValid() and do nothing otherwise? This issue is more interesting that it seems.
 
 Good question to start with is if **SoundSystem** is not valid in OnAttacked() context then maybe we should tell someone about it? To do that one can use multiple methods: return values, delegates calling, writing some error message to log... but wait! **SoundSystem** is not valid! 
 
-When a game system is not valid then what do we have to do? Well, let's get an instance of that system because it should be created already, right? 
+When a game system is not valid then what do we can to do? Well, let's get an instance of that system because it should be created already, right? 
 ```cpp
 APlayer::OnAttacked()
 {
@@ -72,7 +72,7 @@ Notice that we fixed our issue with checking SoundSystem pointer in OnAttacked()
 
 Additional question is what if we don't want to store SoundSystem pointer in APlayer? Imagine one has AEnemy, AEnemyTank, AEnemyTower instead of only APlayer and all those classes have to have ability to play sound cue.
 
-Solution is to divide pointer checks into "soft" and "hard" ones. Soft check is when program can continue execution process. Hard one is when we tell program to stop the execution.
+I think good solution is to divide all pointer checks into "soft" and "hard" ones. Soft check is when a program can continue execution. Hard one is when we tell a program to stop the execution.
 
 In our case we need "hard" check of SoundSystem pointer because otherwise that means something is totally wrong with game systems initialization process.
 
@@ -100,4 +100,4 @@ APlayer::OnAttacked()
 }
 ```
 
-Happy reading!
+As a conclusion I will also say that default engine macroses checkSlow, checkfSlow, verifySlow are especially good if you need to check a pointer only in a debug version of your code. 
