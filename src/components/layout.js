@@ -6,7 +6,7 @@ import { Helmet } from "react-helmet"
 import "./global.css"
 
 import favicon from "../../favicon.png"
-import cv_pdf from "../../content/cv.pdf"
+import cv_pdf from "../../content/peter_leontev_cv.pdf"
 
 
 

@@ -22,16 +22,10 @@ class PostworldUIProject extends React.Component {
               </div>
               <ul style={{ listStylePosition: `inside`, marginLeft: 0 }}>
                   <li>
-                      Unreal Engine 4
+                    <a style={{color: '#b25b05' }} href="https://www.unrealengine.com/">Unreal Engine 4 C++ and Blueprints</a>
                   </li>
                   <li>
-                      Blueprints
-                  </li>
-                  <li>
-                      UMG
-                  </li>
-                  <li>
-                      Widget pool
+                    <a style={{color: '#b25b05' }} href="https://en.wikipedia.org/wiki/Pool_(computer_science)">Widget pool</a>
                   </li>
             </ul> 
           </BlogLayout>
