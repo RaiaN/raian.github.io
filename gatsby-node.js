@@ -8,7 +8,7 @@ exports.createPages = ({ graphql, actions }) => {
   return graphql(
     `
       {
-        allMarkdownRemark(
+        allMdx(
           sort: { fields: [frontmatter___date], order: DESC }
           limit: 1000
         ) {
@@ -31,9 +31,9 @@ exports.createPages = ({ graphql, actions }) => {
       throw result.errors
     }
 
+    const posts = result.data.allMdx.edges;
+    
     // Create blog posts pages.
-    const posts = result.data.allMarkdownRemark.edges
-
     posts.forEach((post, index) => {
       const previous = index === posts.length - 1 ? null : posts[index + 1].node
       const next = index === 0 ? null : posts[index - 1].node
@@ -56,12 +56,16 @@ exports.createPages = ({ graphql, actions }) => {
 exports.onCreateNode = ({ node, actions, getNode }) => {
   const { createNodeField } = actions
 
-  if (node.internal.type === `MarkdownRemark`) {
-    const value = createFilePath({ node, getNode })
+  // We only want to operate on `Mdx` nodes. If we had content from a
+  // remote CMS we could also check to see if the parent node was a
+  // `File` node here
+
+  if (node.internal.type === `Mdx`) {
+    const value = createFilePath({ node, getNode });
     createNodeField({
       name: `slug`,
       node,
-      value,
-    })
+      value: `/blog${value}`
+    });
   }
 }
