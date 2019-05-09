@@ -81,5 +81,12 @@ module.exports = {
         jsxPlugins: ["styled-jsx-plugin-postcss"],
       },
     },
+    {
+      resolve: `gatsby-plugin-google-analytics`,
+      options: {
+        trackingId: "UA-139915107-1",
+        head: true,
+      },
+    },
   ],
 }
