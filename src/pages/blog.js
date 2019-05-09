@@ -3,7 +3,7 @@ import { Link, graphql } from "gatsby"
 import BlogLayout from "../components/blogLayout"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
-import { rhythm } from "../utils/typography"
+import { rhythm, scale } from "../utils/typography"
 
 export default props =>
 (
@@ -19,7 +19,7 @@ export default props =>
       {props.data.allMdx.edges.map(({ node }) => {
         const title = node.frontmatter.title || node.fields.slug
         return (
-          <div key={node.fields.slug} style={{marginBottom: rhythm(2)}}>
+          <div key={node.fields.slug} style={{ marginBottom: rhythm(2) }}>
             <h4
               style={{
                   marginBottom: 7,
@@ -30,7 +30,16 @@ export default props =>
                 {title}
               </Link>
             </h4>
-            <small>{node.frontmatter.date}</small>
+            <p
+              style={{
+                ...scale(-1 / 5),
+                display: `block`,
+                marginBottom: rhythm(1/3),
+                marginTop: 0,
+              }}
+            >
+              {node.frontmatter.date}
+            </p>
             <div>
               <p
                 dangerouslySetInnerHTML={{

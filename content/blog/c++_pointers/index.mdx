@@ -5,6 +5,7 @@ description: In this article I will briefly explain approaches to check if a poi
 ---
 
 Imagine the following situation in Unreal Engine 4 gameplay code:
+
 ```cpp
 APlayer::OnAttacked()
 {
@@ -15,7 +16,6 @@ APlayer::OnAttacked()
     }
 }
 ```
-
 
 **SoundSystem** can be invalid but what does that mean? Is it OK situation to just use IsValid() and do nothing otherwise? This issue is more interesting that it seems.
 
@@ -39,8 +39,7 @@ But should we use IsValid() again just to be sure SoundSystem we've got is valid
 Another way to fix this problem is to put SoundSystem initialization into APlayer method that can guarantee SoundSystem is initialized:
 ```cpp
 
-class USoundSystem;
-
+// .h
 class APlayer : AActor
 {
     ...
@@ -49,6 +48,8 @@ private:
     USoundSystem* SoundSystem;
 };
 
+
+// .cpp
 APlayer::APlayer()
 {
     SoundSystem = nullptr;
@@ -77,7 +78,7 @@ I think good solution is to divide all pointer checks into "soft" and "hard" one
 In our case we need "hard" check of SoundSystem pointer because otherwise that means something is totally wrong with game systems initialization process.
 
 How to do "hard" checks in Unreal Engine 4 C++? There are many ways according to official [documentation](https://www.google.comhttps://docs.unrealengine.com/en-us/Programming):
-```
+```cpp
 * check
 * checkf
 * verify

@@ -4,11 +4,55 @@ import { Link, graphql } from "gatsby"
 import BlogLayout from "../components/blogLayout"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
-import { rhythm, scale } from "../utils/typography"
 
+import { rhythm, scale } from "../utils/typography"
 import { DiscussionEmbed } from "disqus-react"
 import MDXRenderer from "gatsby-mdx/mdx-renderer"
 
+import { createGlobalStyle } from 'styled-components';
+
+import 'prismjs/themes/prism-coy.css';
+
+const GlobalStyle = createGlobalStyle`
+  ${() => {
+    /* Override PrismJS Defaults */ return null;
+  }}  
+  
+  pre code {
+    margin: 0;
+    padding: 0;
+    white-space: pre;
+    border: none;
+    background: transparent;
+  }
+  
+  .highlight pre {
+    background-color: #f8f8f8;
+    border: 1px solid #cccccc;
+    font-size: 13px;
+    line-height: 19px;
+    overflow: auto;
+    padding: 6px 10px;
+    border-radius: 3px;
+  }
+  
+  pre {
+    margin-top: -20px;
+    background-color: #f8f8f8;
+    border: 1px solid #cccccc;
+    font-size: 13px;
+    line-height: 19px;
+    overflow: auto;
+    padding: 6px 10px;
+    border-radius: 3px;
+  }
+  
+  pre code, pre tt {
+    background-color: transparent;
+    border: none;
+  }
+
+`;
 
 
 class BlogPostTemplate extends React.Component {
@@ -33,7 +77,14 @@ class BlogPostTemplate extends React.Component {
             title={post.frontmatter.title}
             description={post.frontmatter.description || post.excerpt}
           />
-          <h4 style={{marginBottom: 0, marginTop: 0}}><i>{post.frontmatter.title}</i></h4>
+          <h4
+              style={{
+                  marginBottom: 7,
+                  marginTop: 0
+              }}
+          >
+            <i>{post.frontmatter.title}</i>
+          </h4>
           <p
             style={{
               ...scale(-1 / 5),
@@ -44,6 +95,9 @@ class BlogPostTemplate extends React.Component {
           >
             {post.frontmatter.date}
           </p>
+
+          <GlobalStyle />
+
           <MDXRenderer>
             {post.code.body}
           </MDXRenderer>
