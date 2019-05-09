@@ -7,7 +7,7 @@ module.exports = {
     social: {
       twitter: `PeterLeontev`,
     },
-    DisqusID: `peterleontev`
+    disqusID: `peterleontev`
   },
   plugins: [
     {

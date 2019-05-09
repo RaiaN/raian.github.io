@@ -10,9 +10,6 @@ import { DiscussionEmbed } from "disqus-react"
 
 
 
-
-
-
 class BlogPostTemplate extends React.Component {
   render() {
     const post = this.props.data.markdownRemark
@@ -21,7 +18,7 @@ class BlogPostTemplate extends React.Component {
 
     const disqusConfig = 
     {
-      shortname: `peterleontev`,
+      shortname: this.props.data.site.siteMetadata.disqusID,
       config: { identifier: post.frontmatter.title, siteTitle },
     }
 
@@ -107,7 +104,8 @@ export const pageQuery = graphql`
     site {
       siteMetadata {
         author,
-        title
+        title,
+        disqusID
       }
     }
     markdownRemark(fields: { slug: { eq: $slug } }) {
