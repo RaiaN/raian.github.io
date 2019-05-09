@@ -13,8 +13,8 @@ export default props =>
     </Link>
     <BlogLayout location={props.location}>
       <SEO
-        title="All posts"
-        keywords={[`blog`, `unreal engine`]}
+        title="Blog"
+        keywords={[`unreal engine`, `blog`, `developers`]}
       />
       {props.data.allMdx.edges.map(({ node }) => {
         const title = node.frontmatter.title
