@@ -28,6 +28,9 @@ export default () => (
                 <li>
                     <a style={{color: '#b25b05' }} href="https://twitter.com/PeterLeontev">Twitter</a>
                 </li>
+                <li>
+                    <a style={{color: '#b25b05' }} href="https://github.com/RaiaN">Github</a>
+                </li>
             </ul> 
         </div>        
     </Layout>
