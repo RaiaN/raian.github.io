@@ -37,7 +37,8 @@ const GlobalStyle = createGlobalStyle`
   }
   
   pre {
-    margin-top: -20px;
+    margin-top: -15px;
+    margin-bottom: 5px;
     background-color: #f8f8f8;
     border: 1px solid #cccccc;
     font-size: 13px;

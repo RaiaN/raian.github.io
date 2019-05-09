@@ -34,6 +34,7 @@ APlayer::OnAttacked()
     SoundSystem->PlaySoundCue(OnAttackedSoundCue);
 }
 ```
+
 But should we use IsValid() again just to be sure SoundSystem we've got is valid? It seems like we are going to have a infinite loop here.
 
 Another way to fix this problem is to put SoundSystem initialization into APlayer method that can guarantee SoundSystem is initialized:
