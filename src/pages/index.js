@@ -7,7 +7,7 @@ import "../utils/li.css"
 
 export default () => (
     <Layout>
-        <h3 style={{margin: 0, marginBottom: rhythm(2) }}>About</h3>
+        <h3 style={{margin: 0, marginBottom: rhythm(1.8) }}>About</h3>
         <p>
             I am generalist programmer passionated about creating game technologies and improving quality of pipelines. 
             These days I mostly work with Unreal Engine, C++ and Python.

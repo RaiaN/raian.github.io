@@ -2,16 +2,22 @@ import React from "react"
 
 import BlogLayout from "../../components/blogLayout"
 import Layout from "../../components/layout"
+import SEO from "../../components/seo"
 
 import procedural_generation_img from "../../../content/images/procedural_generation_large.jpg"
 import { rhythm } from "../../utils/typography";
 
 import "../../utils/li.css"
 
+
 class PostworldUIProject extends React.Component {
   render() {
     return (
       <Layout>
+          <SEO
+              title={`Procedural generation`}
+              keywords={[`unreal engine`, `procedural generation`, `rendering`, `algorithms`]}
+          />
           <BlogLayout>
               <div style={{ marginBottom: 0, marginTop: 0}}>
                   <h3 style={{ marginTop: 0, marginBottom: rhythm(2) }}>Procedural terrain generation</h3>
