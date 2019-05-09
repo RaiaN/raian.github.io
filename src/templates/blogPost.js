@@ -7,12 +7,13 @@ import SEO from "../components/seo"
 import { rhythm, scale } from "../utils/typography"
 
 import { DiscussionEmbed } from "disqus-react"
+import MDXRenderer from "gatsby-mdx/mdx-renderer"
 
 
 
 class BlogPostTemplate extends React.Component {
   render() {
-    const post = this.props.data.markdownRemark
+    const post = this.props.data.mdx
     const siteTitle = this.props.data.site.siteMetadata.title
     const { previous, next } = this.props.pageContext
 
@@ -43,18 +44,9 @@ class BlogPostTemplate extends React.Component {
           >
             {post.frontmatter.date}
           </p>
-          <React.Fragment>
-              <div dangerouslySetInnerHTML={{ __html: post.html }} />
-              <style jsx>
-              {`
-                  :global(pre) {
-                    background: #dddddd;
-                  }
-              `}
-              </style>
-              
-          </React.Fragment>
-          
+          <MDXRenderer>
+            {post.code.body}
+          </MDXRenderer>
           
           <hr
             style={{
@@ -99,7 +91,7 @@ class BlogPostTemplate extends React.Component {
 
 export default BlogPostTemplate
 
-export const pageQuery = graphql`
+export const blogPostQuery = graphql`
   query BlogPostBySlug($slug: String!) {
     site {
       siteMetadata {
@@ -108,10 +100,12 @@ export const pageQuery = graphql`
         disqusID
       }
     }
-    markdownRemark(fields: { slug: { eq: $slug } }) {
+    mdx(fields: { slug: { eq: $slug } }) {
       id
       excerpt(pruneLength: 160)
-      html
+      code {
+        body
+      }
       frontmatter {
         title
         date(formatString: "MMMM DD, YYYY")
