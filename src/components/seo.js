@@ -16,7 +16,7 @@ function SEO({ description, lang, meta, keywords, title }) {
       query {
         site {
           siteMetadata {
-            description
+            description,
             author
           }
         }
@@ -31,7 +31,7 @@ function SEO({ description, lang, meta, keywords, title }) {
       htmlAttributes={{
         lang,
       }}
-      titleTemplate={`%s | ${site.siteMetadata.title}`}
+      titleTemplate={`%s | ${title}`}
       meta={[
         {
           name: `description`,

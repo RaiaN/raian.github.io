@@ -14,10 +14,10 @@ export default props =>
     <BlogLayout location={props.location}>
       <SEO
         title="All posts"
-        keywords={[`blog`, `gatsby`, `javascript`, `react`]}
+        keywords={[`blog`, `unreal engine`]}
       />
       {props.data.allMdx.edges.map(({ node }) => {
-        const title = node.frontmatter.title || node.fields.slug
+        const title = node.frontmatter.title
         return (
           <div key={node.fields.slug} style={{ marginBottom: rhythm(2) }}>
             <h4
@@ -43,7 +43,7 @@ export default props =>
             <div>
               <p
                 dangerouslySetInnerHTML={{
-                  __html: node.frontmatter.description || node.excerpt,
+                  __html: node.frontmatter.description,
                 }}
               />
             </div>
