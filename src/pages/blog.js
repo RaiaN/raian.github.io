@@ -5,7 +5,6 @@ import Layout from "../components/layout"
 import SEO from "../components/seo"
 import { rhythm } from "../utils/typography"
 
-
 export default props =>
 (
   <Layout>
@@ -17,7 +16,7 @@ export default props =>
         title="All posts"
         keywords={[`blog`, `gatsby`, `javascript`, `react`]}
       />
-      {props.data.allMarkdownRemark.edges.map(({ node }) => {
+      {props.data.allMdx.edges.map(({ node }) => {
         const title = node.frontmatter.title || node.fields.slug
         return (
           <div key={node.fields.slug} style={{marginBottom: rhythm(2)}}>
@@ -32,11 +31,13 @@ export default props =>
               </Link>
             </h4>
             <small>{node.frontmatter.date}</small>
-            <p
-              dangerouslySetInnerHTML={{
-                __html: node.frontmatter.description || node.excerpt,
-              }}
-            />
+            <div>
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: node.frontmatter.description || node.excerpt,
+                }}
+              />
+            </div>
           </div>
         )
       })}
@@ -47,7 +48,7 @@ export default props =>
 
 export const pageQuery = graphql`
   query {
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+    allMdx(sort: { fields: [frontmatter___date], order: DESC }) {
       edges {
         node {
           excerpt
