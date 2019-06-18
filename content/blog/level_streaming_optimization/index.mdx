@@ -139,6 +139,6 @@ All mentioned console variables above could be a good starting point to optimize
 Unreal Engine 4 website has great [**documentation**](https://docs.unrealengine.com/en-US/Engine/Performance/index.html) about what exactly you should profile in your game so check it out!
 
 
-P.S. Besides all that there is a way to fix your PhysX tree rebuild rate (the number of frames it takes to rebuild the PhysX scene query AABB tree) using either console command *p.PhysXTreeRebuildRate number_of_frames* or config variable *PhysXTreeRebuildRate* that can be found in Project Settings.
+P.S. Besides all that there is a way to fix your PhysX tree rebuild rate: the number of frames it takes to rebuild the PhysX scene query AABB tree, the bigger the number, the smaller fetchResults takes per frame, but the more the tree deteriorates until a new tree is built (according to official documentation). Use either config variable *PhysXTreeRebuildRate* in Project Settings or console command *p.PhysXTreeRebuildRate number_of_frames*. 
 
 Enjoy!
