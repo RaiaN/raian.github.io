@@ -16,11 +16,11 @@ export default () => (
             You can learn more about me through my <Link style={{color: `#b25b05`}} to="/projects/">work</Link> and <Link style={{color: `#b25b05`}} to="/blog/">technical blog</Link>.
         </p>
         <p>Besides tech I enjoy bouldering, roller skating, watching esport and playing computer games.</p>
-        <b>Contact me:</b>
+        <b>Contacts:</b>
         <div>
             <ul style={{ listStylePosition: `inside` }}>
                 <li>
-                    <a style={{color: '#b25b05'}} href="mailto:leontev.petr@gmail.com">Email</a>
+                    leontev.petr at gmail dot com
                 </li>
                 <li>
                     <a style={{color: '#b25b05' }} href="https://www.linkedin.com/in/peter-leontev-67b34863/">LinkedIn</a>
