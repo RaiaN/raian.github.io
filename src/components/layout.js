@@ -24,7 +24,7 @@ class Layout extends React.Component {
                             <h2 className="author">Peter Leontev</h2>
                         </Link>
                         <ul className="navigation">
-                            <ListLink to="/"><b>About</b></ListLink>
+                            <ListLink to="/about"><b>About</b></ListLink>
                             <ListLink to="/projects/"><b>Work</b></ListLink>
                             <ListLink to="/blog/"><b>Blog</b></ListLink>
                             <ExternalLink url={cv_pdf} url_name="CV"/>
@@ -34,7 +34,7 @@ class Layout extends React.Component {
                         {this.props.children}
                     </div>
                     <footer>
-                        <i>© <Link to="/">Peter Leontev</Link></i>
+                        <i>© <Link to="/about">Peter Leontev</Link></i>
                     </footer>
                 </div>
                 <style jsx>
