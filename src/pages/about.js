@@ -20,7 +20,7 @@ export default () => (
         <div>
             <ul style={{ listStylePosition: `inside` }}>
                 <li>
-                    leontev.petr at gmail dot com
+                    leontev dot petr at gmail dot com
                 </li>
                 <li>
                     <a style={{color: '#b25b05' }} href="https://www.linkedin.com/in/peter-leontev-67b34863/">LinkedIn</a>
