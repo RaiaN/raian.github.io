@@ -7,10 +7,10 @@ exports.createPages = ({ graphql, actions }) => {
   const { createRedirect } = actions
 
   createRedirect({
-    fromPath: `/`,
+    fromPath: `/blog`,
     isPermanent: true,
     redirectInBrowser: true,
-    toPath: `/blog`,
+    toPath: `/`,
   })
 
   const blogPost = path.resolve(`./src/templates/blogPost.js`)
