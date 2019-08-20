@@ -25,7 +25,6 @@ class Layout extends React.Component {
                         </Link>
                         <ul className="navigation">
                             <ListLink to="/about"><b>About</b></ListLink>
-                            <ListLink to="/projects"><b>Work</b></ListLink>
                             <ListLink to="/"><b>Blog</b></ListLink>
                             <ExternalLink url={cv_pdf} url_name="CV"/>
                         </ul>
