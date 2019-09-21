@@ -1,12 +1,230 @@
 ---
-title: WIP, How Cast works in Unreal Engine 4?
-date: "2019-07-27"
-description: And is it any better than dynamic_cast?
+title: How Cast function works in Unreal Engine 4?
+date: "2019-09-21"
+description: Type safery, runtime cost and more
 ---
 
-What happens when you write Cast? 
+Unreal C++ **Cast<T\>(SomeObject)** allows to dynamically cast an object type-safely. But what is difference between *Cast<T\>* and *dynamic_cast<T*\>*? Lets figure that out!
+
+Unreal Engine C++ provides a built-in support for [**reflection system**](https://www.unrealengine.com/en-US/blog/unreal-property-system-reflection) that provides the way to perform type-safe up- and down-casts without a need for *dynamic_cast<T\>*. Lets look at the function *Cast<T\>*: 
+
+```cpp
+template <typename To, typename From>
+FORCEINLINE To* Cast(From* Src)
+{
+	return TCastImpl<From, To>::DoCast(Src);
+}
+```
+
+*Cast* function simply uses some template structure called *TCastImpl* to convert the pointer of *From* class to the pointer of *To* class. Indeed, *TCastImpl* is where all the magic happens.
+
+```cpp
+template <typename From, typename To, ECastType CastType = TGetCastType<From, To>::Value>
+struct TCastImpl
+{
+	// This is the cast flags implementation
+	FORCEINLINE static To* DoCast( UObject* Src )
+	{
+		return Src && Src->GetClass()->HasAnyCastFlag(TCastFlags<To>::Value) ? (To*)Src : nullptr;
+	}
+
+	FORCEINLINE static To* DoCastCheckedWithoutTypeCheck( UObject* Src )
+	{
+		return (To*)Src;
+	}
+};
+```
+
+Given the valid pointer of *From* class *DoCast* uses C-style cast to convert it to the pointer of *To* class, otherwise nullptr is returned (note that *dynamic_cast<T\>* is neved considered when using a C-style cast). This way both const and non-const pointers are handled correctly since C-style casts tries *const_cast* first and only then *static_cast*. So far, so good. 
+
+There are several questions about *DoCast* implementation. The first is how efficient *HasAnyCastFlag()* function? It turns out that this function simply checks bitmask. Also notice that *FORCEINLINE* is used (which is actually [*__forceinline*](https://docs.microsoft.com/en-us/cpp/cpp/inline-functions-cpp?redirectedfrom=MSDN&view=vs-2019) keyword that is supported by MSVS compiler) to potentially remove the function call cost.
+
+```cpp
+FORCEINLINE bool HasAnyCastFlag(EClassCastFlags FlagToCheck) const
+{
+    return (ClassCastFlags&FlagToCheck) != 0;
+}
+```
+
+Also, it is important to remember that the *Cast* function should not be called too often. Ideally, the game code should not call the Cast function at all!
+
+The second question is related to C-style cast. Will *reinterpret_cast* be used in some cases? The answer is not because that is where Unreal *reflection system* comes into play. What it does is simply stores an additional information about the class in its *CDO (Class Default Object)*. More specifically, it is either corresponding *UStruct* object or  *ClassCastFlags* or both. Using this reflection information in runtime one can determine whether two classes belong to the same hierarchy and if they are not then nullptr is returned. 
+
+Now lets return to the structure *TCastImpl*. It turns out that *TCastImpl::DoCast* function above won't be called in the default configuration of UE4 C++ module. Why? This is all due to how the template structure *TGetCastType* works (below).
+
+```cpp
+template <typename From, typename To, bool bFromInterface = TIsIInterface<From>::Value, bool bToInterface = TIsIInterface<To>::Value, EClassCastFlags CastClass = TCastFlags<To>::Value>
+struct TGetCastType
+{
+#if USTRUCT_FAST_ISCHILDOF_IMPL == USTRUCT_ISCHILDOF_STRUCTARRAY
+	static const ECastType Value = ECastType::UObjectToUObject;
+#else
+	static const ECastType Value = ECastType::FromCastFlags;
+#endif
+};
+
+template <typename From, typename To                           > struct TGetCastType<From, To, false, false, CASTCLASS_None> { static const ECastType Value = ECastType::UObjectToUObject;     };
+template <typename From, typename To                           > struct TGetCastType<From, To, false, true , CASTCLASS_None> { static const ECastType Value = ECastType::UObjectToInterface;   };
+template <typename From, typename To, EClassCastFlags CastClass> struct TGetCastType<From, To, true,  false, CastClass     > { static const ECastType Value = ECastType::InterfaceToUObject;   };
+template <typename From, typename To, EClassCastFlags CastClass> struct TGetCastType<From, To, true,  true , CastClass     > { static const ECastType Value = ECastType::InterfaceToInterface; };
+```
+
+The third and the forth template arguments of *TGetCastType* are checked for an interface type. This way one of four *TGetCastType* specializations above will be chosen. After that the specialization of *TCastImpl* structure will be selected using *ECastType* value to perform the cast itself (*UObject to UObject*, *UObject to Interface* and so on).
+
+Lets look at the one of *TCastImpl* specializations that handles *UObject to UObject* cast (other *TCastImpl* specializations are quite similar):
+
+```cpp
+template <typename From, typename To>
+struct TCastImpl<From, To, ECastType::UObjectToUObject>
+{
+	FORCEINLINE static To* DoCast( UObject* Src )
+	{
+		return Src && Src->IsA<To>() ? (To*)Src : nullptr;
+	}
+
+	FORCEINLINE static To* DoCastCheckedWithoutTypeCheck( UObject* Src )
+	{
+		return (To*)Src;
+	}
+};
+```
+
+*DoCast()* calls *IsA()* function to determine whether passed object is of the specified type. If that is true then C-style cast is applied. 
+
+What is the performance cost of *IsA()* function call in the default configuration of UE4 C++ module? It turns out that the performance heavy part of *IsA()* function is the call to *IsChildOf()* function that has two quite different implementations.
+
+```cpp
+	/** Returns true if this struct either is SomeBase, or is a child of SomeBase. This will not crash on null structs */
+#if USTRUCT_FAST_ISCHILDOF_COMPARE_WITH_OUTERWALK || USTRUCT_FAST_ISCHILDOF_IMPL == USTRUCT_ISCHILDOF_OUTERWALK
+	bool IsChildOf( const UStruct* SomeBase ) const;
+#else
+	bool IsChildOf(const UStruct* SomeBase) const
+	{
+		return (SomeBase ? IsChildOfUsingStructArray(*SomeBase) : false);
+	}
+#endif
+```
+
+When *UE_EDITOR* = 1 the preprocessor directive *USTRUCT_FAST_ISCHILDOF_IMPL = USTRUCT_ISCHILDOF_OUTERWALK* and that means the following implementation of *IsChildOf* function is going to be used:
+
+```cpp
+#if USTRUCT_FAST_ISCHILDOF_COMPARE_WITH_OUTERWALK || USTRUCT_FAST_ISCHILDOF_IMPL == USTRUCT_ISCHILDOF_OUTERWALK
+bool UStruct::IsChildOf( const UStruct* SomeBase ) const
+{
+	if (SomeBase == nullptr)
+	{
+		return false;
+	}
+
+	bool bOldResult = false;
+	for ( const UStruct* TempStruct=this; TempStruct; TempStruct=TempStruct->GetSuperStruct() )
+	{
+		if ( TempStruct == SomeBase )
+		{
+			bOldResult = true;
+			break;
+		}
+	}
+
+#if USTRUCT_FAST_ISCHILDOF_IMPL == USTRUCT_ISCHILDOF_STRUCTARRAY
+	const bool bNewResult = IsChildOfUsingStructArray(*SomeBase);
+#endif
+
+#if USTRUCT_FAST_ISCHILDOF_COMPARE_WITH_OUTERWALK
+	ensureMsgf(bOldResult == bNewResult, TEXT("New cast code failed"));
+#endif
+
+	return bOldResult;
+}
+#endif
+```
+
+The most important part here is the inner *for* loop that tries to find a pair of equal reflection structs between a given class and a passed one. If such a pair is found then one class is a child of another. Runtime cost of such *IsChildOf* function is equal to the depth of the inheritance tree, *O(Depth(InheritanceTree))*.
 
 
+When *UE_EDITOR* = 1 the preprocessor directive *USTRUCT_FAST_ISCHILDOF_IMPL = USTRUCT_ISCHILDOF_STRUCTARRAY* and that means the following implementation of *IsChildOf* function is going to be used:
+
+```cpp
+bool IsChildOf(const UStruct* SomeBase) const
+{
+    return (SomeBase ? IsChildOfUsingStructArray(*SomeBase) : false);
+}
+
+#if USTRUCT_FAST_ISCHILDOF_IMPL == USTRUCT_ISCHILDOF_STRUCTARRAY
+class FStructBaseChain
+{
+protected:
+	COREUOBJECT_API FStructBaseChain();
+	COREUOBJECT_API ~FStructBaseChain();
+
+	// Non-copyable
+	FStructBaseChain(const FStructBaseChain&) = delete;
+	FStructBaseChain& operator=(const FStructBaseChain&) = delete;
+
+	COREUOBJECT_API void ReinitializeBaseChainArray();
+
+    // this is O(1) implementation of IsChildOf
+	FORCEINLINE bool IsChildOfUsingStructArray(const FStructBaseChain& Parent) const
+	{
+		int32 NumParentStructBasesInChainMinusOne = Parent.NumStructBasesInChainMinusOne;
+		return NumParentStructBasesInChainMinusOne <= NumStructBasesInChainMinusOne && StructBaseChainArray[NumParentStructBasesInChainMinusOne] == &Parent;
+	}
+
+private:
+	FStructBaseChain** StructBaseChainArray;
+	int32 NumStructBasesInChainMinusOne;
+
+	friend class UStruct;
+};
+#endif
+```
+
+The function *IsChildOfUsingStructArray* uses *StructBaseChainArray* array as a storage for reflection data or structs of the class to speed up the checking algorithm.
 
 
+How *Cast<T\>* can support both up- and down-casts? The reason is that pointers of different classes can point to the same object but that does not change their reflection data or structs (and indeed the content of *StructBaseChainArray*) so *IsA* will always find a pair of equal reflection structs given both classes belong to the same class hierarchy.
+
+
+This leads to the conclusion that ***Cast<T\>* runtime cost** is:
+```cpp
+- Linear,   O(Depth(InheritanceTree)), in the editor environment     (UE_EDITOR = 1).
+- Constant, O(1),                      in the non-editor environment (UE_EDITOR = 0).
+```
+
+
+To slightly reduce *Cast<T\>* runtime cost there is the function *ExactCast<T\>*:
+```cpp
+template< class T >
+FORCEINLINE T* ExactCast( UObject* Src )
+{
+	return Src && (Src->GetClass() == T::StaticClass()) ? (T*)Src : nullptr;
+}
+```
+
+Both *GetClass()* and *StaticClass()* calls are O(1) so *ExactCast* is a good option when the type of a passed object is known beforehand. There is even a more efficient *CastChecked* function, which is basically C-style cast in non-editor environment but it is not that quite safe though.
+
+
+Now, what is the point of using *Cast<T\>* if one can go for *static_cast* to do exactly the same? The answer is type safety. **If one mismatches the class types or change the inheritance tree *Cast<T\>* will return nullptr. *static_cast*, in contrast, may perform cast and return some invalid pointer**. Below is the example of such a behaviour:
+
+```cpp
+// APawn is the parent of ACharacter
+APawn* NewPawn = NewObject<APawn>(GWorld);
+
+ACharacter* StaticCastCharacter = static_cast<ACharacter*>(NewPawn);
+ACharacter* UnrealCastCharacter = Cast<ACharacter>(NewPawn);
+```
+
+*static_cast<ACharacter\*\>* above will return a pointer to *ACharacter* even though created object is of type *APawn*. However, *Cast<ACharacter\>* will return *nullptr*, which is much better.
+
+To close C++ casts topic, one may still use *dynamic_cast* in Unreal C++ but it is heavily "overriden" to use *Cast<T\>* function when possible (when casting from pointer to pointer or from rvalue to rvalue).
+
+
+To sum up, key things about *Cast<T\>* in Unreal C++ are listed below:
+```cpp
+- Cast<T> has to be used for *UObjects* due to type safety; it will return *nullptr* in case of a failure in comparison with *static_cast*.
+- Cast<T> runtime cost is *O(1) or constant* in non-editor environment and *O(Depth(InheritanceTree))* in editor environment.
+- Cast<T> does not use *dynamic_cast*.
+```
+
+Enjoy!
 
