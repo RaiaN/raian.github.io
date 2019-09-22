@@ -1,12 +1,12 @@
 ---
-title: How Cast<T> function works in Unreal Engine 4?
+title: How C++ Cast<T> function works in Unreal Engine 4?
 date: "2019-09-21"
 description: Type safety, runtime cost and more
 ---
 
-Unreal C++ **Cast<T\>(SomeObject)** allows to dynamically cast an object type-safely. But what is difference between *Cast<T\>* and *dynamic_cast<T*\>*? Lets figure that out!
+Unreal Engine C++ **Cast<T\>(SomeObject)** allows to dynamically cast an object type-safely. But what is difference between *Cast<T\>* and *dynamic_cast<T*\>*? Lets figure that out!
 
-Unreal Engine C++ provides a built-in support for [**reflection system**](https://www.unrealengine.com/en-US/blog/unreal-property-system-reflection) that provides the way to perform type-safe up- and down-casts without a need for *dynamic_cast<T\>*. Lets look at the function *Cast<T\>*: 
+Unreal Engine C++ provides a built-in support for [**reflection system**](https://www.unrealengine.com/en-US/blog/unreal-property-system-reflection) that provides the way to perform type-safe up- and down-casts without a need for *dynamic_cast<T*\>. Lets look at the function *Cast<T\>*: 
 
 ```cpp
 template <typename To, typename From>
@@ -46,7 +46,7 @@ FORCEINLINE bool HasAnyCastFlag(EClassCastFlags FlagToCheck) const
 }
 ```
 
-Also, it is important to remember that the *Cast* function should not be called too often. Ideally, the game code should not call the Cast function at all!
+Also, it is important to remember that the *Cast* function should not be called too often. Ideally, the game code should not call *Cast* function at all!
 
 The second question is related to C-style cast. Will *reinterpret_cast* be used in some cases? The answer is not because that is where Unreal *reflection system* comes into play. What it does is simply stores an additional information about the class in its *CDO (Class Default Object)*. More specifically, it is either corresponding *UStruct* object or  *ClassCastFlags* or both. Using this reflection information in runtime one can determine whether two classes belong to the same hierarchy and if they are not then nullptr is returned. 
 
