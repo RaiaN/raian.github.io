@@ -216,7 +216,7 @@ ACharacter* UnrealCastCharacter = Cast<ACharacter>(NewPawn);
 
 *static_cast<ACharacter\*\>* above will return a pointer to *ACharacter* even though created object is of type *APawn*. However, *Cast<ACharacter\>* will return *nullptr*, which is much better.
 
-To close C++ casts topic, one may still use *dynamic_cast* in Unreal C++ but it is heavily "overriden" to use *Cast<T\>* function when possible (when casting from pointer to pointer or from rvalue to rvalue).
+To close C++ casts topic, one may still use *dynamic_cast* in Unreal C++ but it is heavily "overridden" to use *Cast<T\>* function when possible (when casting from pointer to pointer or from rvalue to rvalue).
 
 
 To sum up, key things about *Cast<T\>* in Unreal C++ are listed below:
