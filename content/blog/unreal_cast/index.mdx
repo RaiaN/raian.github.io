@@ -37,7 +37,7 @@ struct TCastImpl
 
 Given the valid pointer of *From* class *DoCast* uses C-style cast to convert it to the pointer of *To* class, otherwise nullptr is returned (note that *dynamic_cast<T\>* is neved considered when using a C-style cast). This way both const and non-const pointers are handled correctly since C-style casts tries *const_cast* first and only then *static_cast*. So far, so good. 
 
-There are several questions about *DoCast* implementation. The first is how efficient *HasAnyCastFlag()* function? It turns out that this function simply checks bitmask. Also notice that *FORCEINLINE* is used (which is actually [*__forceinline*](https://docs.microsoft.com/en-us/cpp/cpp/inline-functions-cpp?redirectedfrom=MSDN&view=vs-2019) keyword that is supported by MSVS compiler) to potentially remove the function call cost.
+There are several questions about *DoCast* implementation. The first is how efficient *HasAnyCastFlag()* function? It turns out that this function simply checks bitmask. Also notice that *FORCEINLINE* is used (which is actually [*__forceinline*](https://docs.microsoft.com/en-us/cpp/cpp/inline-functions-cpp?redirectedfrom=MSDN&view=vs-2019) keyword that is supported by MSVC) to potentially remove the function call cost.
 
 ```cpp
 FORCEINLINE bool HasAnyCastFlag(EClassCastFlags FlagToCheck) const
