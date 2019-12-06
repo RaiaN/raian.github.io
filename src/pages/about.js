@@ -9,11 +9,11 @@ export default () => (
     <Layout>
         <h3 style={{margin: 0, marginBottom: rhythm(1.8) }}>About</h3>
         <p>
-            I am a generalist programmer passionated about creating game technologies and improving quality of pipelines. 
-            These days I mostly work with Unreal Engine, C++ and Python.
+            I make tools for games and improve quality of people's pipelines. 
+            These days I mostly work with Unreal Engine 4, C++ and Python.
         </p>
         <p>
-            I write about some tech things on my <Link style={{color: `#b25b05`}} to="/">technical blog</Link>.
+            I write about technical stuff <Link style={{color: `#b25b05`}} to="/">here</Link>.
         </p>
         <p>Besides tech I enjoy bouldering, roller skating, watching esport and playing computer games.</p>
         <b>Contacts:</b>
