@@ -9,13 +9,13 @@ export default () => (
     <Layout>
         <h3 style={{margin: 0, marginBottom: rhythm(1.8) }}>About</h3>
         <p>
-            I make tools for games and improve quality of people's pipelines. 
-            These days I mostly work with Unreal Engine 4, C++ and Python.
+            I make Tools for Game Developers and improve quality of their pipelines. 
+            Current stack: Unreal Engine, C++, C#, DCC SDKs.
         </p>
         <p>
             I write about technical stuff <Link style={{color: `#b25b05`}} to="/">here</Link>.
         </p>
-        <p>Besides tech I enjoy bouldering, roller skating, watching esport and playing computer games.</p>
+        <p>Besides tech I enjoy travelling, bouldering, roller skating, watching esport and playing computer games.</p>
         <b>Contacts:</b>
         <div>
             <ul style={{ listStylePosition: `inside` }}>
