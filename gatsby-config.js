@@ -1,8 +1,8 @@
 module.exports = {
   siteMetadata: {
     author: `Peter Leontev`,
-    description: `Personal website and technical blog`,
-    title: `Peter Leontev - Generalist Programmer`,
+    description: `Peter Leontev's technical blog`,
+    title: `Peter Leontev - Senior UE4 Programmer (Tools | Engine)`,
     siteUrl: `https://peterleontev.com`,
     social: {
       twitter: `PeterLeontev`,
