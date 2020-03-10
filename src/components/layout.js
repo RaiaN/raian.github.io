@@ -17,7 +17,7 @@ class Layout extends React.Component {
                 <div className="layout-container">
                     <header className="layout-header">
                         <Helmet>
-                            <title>Peter Leontev - Generalist Developer</title>
+                            <title>Peter Leontev - Senior UE4 Programmer (Tools | Engine)</title>
                             <link rel="icon" type="image/png" href={favicon}/>
                         </Helmet>
                         <Link to="/">
