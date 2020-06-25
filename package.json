@@ -11,7 +11,7 @@
     "start": "npm run develop",
     "serve": "gatsby serve",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\"",
-    "deploy": "gatsby build && gh-pages -d public -b master"
+    "deploy": "gatsby build --prefix-paths && gh-pages -d public -b master -r https://071b2a1a97dd493f9b178875b6cc861adc4d7989N@github.com/raian/raian.github.io.git"
   },
   "dependencies": {
     "@mdx-js/mdx": "^1.6.6",

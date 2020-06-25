@@ -12,12 +12,15 @@ import cv_pdf from "../../content/peter_leontev_cv.pdf"
 
 class Layout extends React.Component {
     render() {
+        // console.log(this);
+        // const siteTitle = this.props.site.siteMetadata.title;
+
         return (
             <React.Fragment>
                 <div className="layout-container">
                     <header className="layout-header">
                         <Helmet>
-                            <title>Peter Leontev - Senior UE4 Programmer (Tools | Engine)</title>
+                            <title>Peter Leontev - Entrepreneur And Game Tools & Tech Programmer</title>
                             <link rel="icon" type="image/png" href={favicon}/>
                         </Helmet>
                         <Link to="/">
