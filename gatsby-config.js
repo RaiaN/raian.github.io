@@ -2,7 +2,7 @@ module.exports = {
   siteMetadata: {
     author: `Peter Leontev`,
     description: `Peter Leontev's technical blog`,
-    title: `Peter Leontev - Senior UE4 Programmer (Tools | Engine)`,
+    title: `Peter Leontev - Entrepreneur And Game Tools & Tech Programmer`,
     siteUrl: `https://peterleontev.com`,
     social: {
       twitter: `PeterLeontev`,
@@ -11,7 +11,10 @@ module.exports = {
   },
   plugins: [
     {
-      resolve: `gatsby-mdx`,
+      resolve: `gatsby-plugin-mdx`,
+      options: {
+        extensions: [`.mdx`],
+      },
     },
     {
       resolve: `gatsby-source-filesystem`,
@@ -75,7 +78,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-styled-jsx`,
       options: {
-        jsxPlugins: ["styled-jsx-plugin-postcss"],
+        //jsxPlugins: ["styled-jsx-plugin-postcss"],
       },
     },
     {
@@ -84,6 +87,6 @@ module.exports = {
         trackingId: "UA-139915107-1",
         head: true,
       },
-    },
+    }
   ],
 }

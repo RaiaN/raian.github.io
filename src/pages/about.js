@@ -9,7 +9,7 @@ export default () => (
     <Layout>
         <h3 style={{margin: 0, marginBottom: rhythm(1.8) }}>About</h3>
         <p>
-            I make Tools for Game Developers. 
+            I make Game Tools And Tech for Developers. 
             Current stack: Unreal Engine, C++, Python, C#, DCC SDKs.
         </p>
         <p>

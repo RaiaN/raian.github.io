@@ -7,7 +7,8 @@ import SEO from "../components/seo"
 
 import { rhythm, scale } from "../utils/typography"
 import { DiscussionEmbed } from "disqus-react"
-import MDXRenderer from "gatsby-mdx/mdx-renderer"
+
+import { MDXRenderer } from "gatsby-plugin-mdx"
 
 import { createGlobalStyle } from 'styled-components';
 
@@ -101,7 +102,7 @@ class BlogPostTemplate extends React.Component {
           <GlobalStyle />
 
           <MDXRenderer>
-            {post.code.body}
+            {post.body}
           </MDXRenderer>
           
           <hr
@@ -159,9 +160,7 @@ export const blogPostQuery = graphql`
     mdx(fields: { slug: { eq: $slug } }) {
       id
       excerpt(pruneLength: 160)
-      code {
-        body
-      }
+      body
       frontmatter {
         title
         date(formatString: "MMMM DD, YYYY")

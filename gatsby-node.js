@@ -62,14 +62,16 @@ exports.createPages = ({ graphql, actions }) => {
   })
 }
 
-exports.onCreateNode = ({ node, actions, getNode }) => {
+exports.onCreateNode = ({ node, actions, getNode }) => 
+{
   const { createNodeField } = actions
 
   // We only want to operate on `Mdx` nodes. If we had content from a
   // remote CMS we could also check to see if the parent node was a
   // `File` node here
 
-  if (node.internal.type === `Mdx`) {
+  if (node.internal.type === `Mdx`) 
+  {
     const value = createFilePath({ node, getNode });
     createNodeField({
       name: `slug`,
