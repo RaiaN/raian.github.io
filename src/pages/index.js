@@ -8,9 +8,7 @@ import { rhythm, scale } from "../utils/typography"
 export default props =>
 (
   <Layout>
-    <Link to="/blog/">
-      <h3 style={{margin: 0, marginBottom: rhythm(2) }}>Blog</h3>
-    </Link>
+    <h3 style={{margin: 0, marginBottom: rhythm(2) }}>Blog</h3>
     <BlogLayout location={props.location}>
       <SEO
         title="Blog"
