@@ -71,7 +71,7 @@ class BlogPostTemplate extends React.Component {
 
     return (
       <Layout>
-        <Link to="/blog/">
+        <Link to="/">
           <h3 style={{margin: 0, marginBottom: rhythm(2) }}>Blog</h3>
         </Link>
         <BlogLayout location={this.props.location} title={siteTitle}>
