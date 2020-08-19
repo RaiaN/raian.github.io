@@ -20,7 +20,7 @@ class Layout extends React.Component {
                 <div className="layout-container">
                     <header className="layout-header">
                         <Helmet>
-                            <title>Peter Leontev - Entrepreneur And Game Tools & Tech Programmer</title>
+                            <title>Peter Leontev - Entrepreneur & Game Tools & Tech Programmer</title>
                             <link rel="icon" type="image/png" href={favicon}/>
                         </Helmet>
                         <Link to="/">
