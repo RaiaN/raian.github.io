@@ -9,7 +9,7 @@ export default () => (
     <Layout>
         <h3 style={{margin: 0, marginBottom: rhythm(1.8) }}>About</h3>
         <p>
-            I make Game Tools And Tech for Developers. 
+            I help startups to create Interactive Technologies & Visualization Platforms. 
             Current stack: Unreal Engine, C++, Python, C#, DCC SDKs.
         </p>
         <p>
@@ -23,7 +23,7 @@ export default () => (
                     leontev dot petr at gmail dot com
                 </li>
                 <li>
-                    <a style={{color: '#b25b05' }} href="https://www.linkedin.com/in/peter-leontev-67b34863/">LinkedIn</a>
+                    <a style={{color: '#b25b05' }} href="https://www.linkedin.com/in/peter-leontev">LinkedIn</a>
                 </li>
                 <li>
                     <a style={{color: '#b25b05' }} href="https://twitter.com/PeterLeontev">Twitter</a>
