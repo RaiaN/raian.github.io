@@ -175,6 +175,6 @@ Note: the above code has to be modified depending on the thread where one wants 
 
 **Conclusion**
 
-Overall this approach works well with the high resolution textures and also gives a great flexibility in terms of what and when the texture related objects should be created. For example, generating texture mips on the background thread and then uploading them to GPU via *RHICopySharedMips* is one of such examples. 
+Overall this approach works well with the high resolution textures and also gives a great flexibility in terms of what and when the texture related objects should be created. For example, generating texture mips on the background thread and then uploading them to GPU via *RHICopySharedMips* is one of such examples. This approach is used in author's Unreal plugin called [**RuntimeImageLoader**](https://github.com/RaiaN/ue4_runtimeimageloader), which is available for free on Github. 
 
 The same approach can be applied to asynchronously create geometry buffers. Have fun!
