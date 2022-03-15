@@ -30,7 +30,7 @@ Texture->PlatformData->Mips[0].BulkData.Unlock();
 Texture->UpdateResource();
 ```
 
-Can the above code be used? Sure. It is a simple solution, which works well for medium-resolution images. However there are pros too. One example is when a set of high resolution images (4k or even 8k) needs to be loaded at runtime without overloading render thread.
+Can the above code be used? Sure. It is a simple solution, which works well for medium-resolution images. However it is sub-optimal or even bad approach when a set of high resolution images (4k or even 8k) needs to be loaded at runtime without overloading render thread.
 
 **Root cause of the render thread hitch**  
 
