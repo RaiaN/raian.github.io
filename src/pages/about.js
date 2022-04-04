@@ -9,7 +9,7 @@ export default () => (
     <Layout>
         <h3 style={{margin: 0, marginBottom: rhythm(1.8) }}>About</h3>
         <p>
-            I help startups to create Interactive Technologies & Visualization Platforms. 
+            I help startups to create Streaming Technologies & Visualization Platforms. 
             Current stack: Unreal Engine, C++, Python, C#, DCC SDKs.
         </p>
         <p>
