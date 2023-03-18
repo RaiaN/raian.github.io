@@ -6,7 +6,7 @@ import { Helmet } from "react-helmet"
 import "./global.css"
 
 import favicon from "../../favicon.png"
-import cv_pdf from "../../content/peter_leontev_cv.pdf"
+import cv_pdf from "../../content/petr_leontev_cv.pdf"
 
 
 
@@ -20,11 +20,11 @@ class Layout extends React.Component {
                 <div className="layout-container">
                     <header className="layout-header">
                         <Helmet>
-                            <title>Peter Leontev - Entrepreneur & Game Tools & Tech Programmer</title>
+                            <title>Petr Leontev - Tech Entrepreneur & Unreal Engineer </title>
                             <link rel="icon" type="image/png" href={favicon}/>
                         </Helmet>
                         <Link to="/">
-                            <h2 className="author">Peter Leontev</h2>
+                            <h2 className="author">Petr Leontev</h2>
                         </Link>
                         <ul className="navigation">
                             <ListLink to="/about"><b>About</b></ListLink>
@@ -36,7 +36,7 @@ class Layout extends React.Component {
                         {this.props.children}
                     </div>
                     <footer>
-                        <i>© <Link to="/about">Peter Leontev</Link></i>
+                        <i>© <Link to="/about">Petr Leontev</Link></i>
                     </footer>
                 </div>
                 <style jsx>

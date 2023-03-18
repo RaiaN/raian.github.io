@@ -1,11 +1,11 @@
 module.exports = {
   siteMetadata: {
-    author: `Peter Leontev`,
-    description: `Peter Leontev's technical blog`,
-    title: `Peter Leontev - Entrepreneur & Game Tools & Tech Programmer`,
+    author: `Petr Leontev`,
+    description: `Petr Leontev's technical blog`,
+    title: `Petr Leontev - Tech Entrepreneur & Unreal Engineer`,
     siteUrl: `https://peterleontev.com`,
     social: {
-      twitter: `PeterLeontev`,
+      twitter: `PetrLeontev`,
     },
     disqusID: `peterleontev`
   },
