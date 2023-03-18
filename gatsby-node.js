@@ -1,7 +1,7 @@
 const path = require(`path`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
 
-exports.createPages = ({ graphql, actions }) => {
+exports.createPages = async ({ graphql, actions, reporter }) => {
   const { createPage } = actions
 
   const { createRedirect } = actions
@@ -11,52 +11,49 @@ exports.createPages = ({ graphql, actions }) => {
     isPermanent: true,
     redirectInBrowser: true,
     toPath: `/`,
-  })
+  });
 
-  const blogPost = path.resolve(`./src/templates/blogPost.js`)
-  return graphql(
+  const blogPostTemplate = path.resolve(`./src/templates/blogPost.js`)
+  const result = await graphql(
     `
-      {
+      query {
         allMdx(sort: {frontmatter: {date: DESC}}, limit: 1000) {
-          edges {
-            node {
-              fields {
-                slug
-              }
-              frontmatter {
-                date
-                title
-              }
+          nodes {
+            frontmatter {
+              slug
+              date
+              title
+            }
+            internal {
+              contentFilePath
             }
           }
         }
       }
     `
-  ).then(result => {
-    if (result.errors) {
-      throw result.errors
-    }
+  );
 
-    const posts = result.data.allMdx.edges;
-    
-    // Create blog posts pages.
-    posts.forEach((post, index) => {
-      const previous = index === posts.length - 1 ? null : posts[index + 1].node
-      const next = index === 0 ? null : posts[index - 1].node
+  if (result.errors) {
+    reporter.panicOnBuild('Error loading MDX result', result.errors);
+  }
 
-      createPage({
-        path: post.node.fields.slug,
-        component: blogPost,
-        context: {
-          slug: post.node.fields.slug,
-          previous,
-          next
-        },
-      })
+  const posts = result.data.allMdx.nodes;
+  
+  // Create blog posts pages.
+  posts.forEach((post, index) => {
+    const previous = index === posts.length - 1 ? null : posts[index + 1].node
+    const next = index === 0 ? null : posts[index - 1].node
+
+    createPage({
+      path: post.frontmatter.slug,
+      component: `${blogPostTemplate}?__contentFilePath=${post.internal.contentFilePath}`,
+      context: {
+        id: post.id,
+        previous: previous,
+        next: next
+      },
     })
-
-    return null
-  })
+  });
 }
 
 exports.onCreateNode = ({ node, actions, getNode }) => 
@@ -70,6 +67,7 @@ exports.onCreateNode = ({ node, actions, getNode }) =>
   if (node.internal.type === `Mdx`) 
   {
     const value = createFilePath({ node, getNode });
+    console.log(`CREATING NODE FOR MDX: ${value}`);
     createNodeField({
       name: `slug`,
       node,
