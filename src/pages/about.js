@@ -10,18 +10,17 @@ export default () => (
         <h3 style={{margin: 0, marginBottom: rhythm(1.8) }}>About</h3>
         <p>
         I work with startups to create Streaming technologies, Visualization platforms and Cloud Rendering pipelines.
-        Current stack: Unreal Engine 4/5, C++, C#, Python, Node.js, AWS. 
-        Feel free to contact me here: https://calendly.com/petr-leontev/30min
+
         </p>
         <p>
-            I write about technical stuff <Link style={{color: `#b25b05`}} to="/">here</Link>.
+            I write about technical stuff <Link style={{color: `#b25b05`}} to="/">here</Link>. Current stack: Unreal Engine 4/5, C++, C#, Python, Node.js, AWS.
         </p>
         <p>Besides tech I enjoy travelling, hiking, bouldering, roller skating, watching esport and playing computer games.</p>
         <b>Contacts:</b>
         <div>
             <ul style={{ listStylePosition: `inside` }}>
                 <li>
-                    leontev dot petr at gmail dot com
+                    <a style={{color: '#b25b05' }} href="https://calendly.com/petr-leontev/30min">Calendly</a>
                 </li>
                 <li>
                     <a style={{color: '#b25b05' }} href="https://www.linkedin.com/in/petr-leontev">LinkedIn</a>
@@ -31,6 +30,9 @@ export default () => (
                 </li>
                 <li>
                     <a style={{color: '#b25b05' }} href="https://github.com/RaiaN">Github</a>
+                </li>
+                <li>
+                    leontev dot petr at gmail dot com
                 </li>
             </ul> 
         </div>        

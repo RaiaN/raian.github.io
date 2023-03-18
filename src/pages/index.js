@@ -55,7 +55,7 @@ export default props =>
 
 export const pageQuery = graphql`
   query {
-    allMdx(sort: { fields: [frontmatter___date], order: DESC }) {
+    allMdx(sort: {frontmatter: {date: DESC}}) {
       edges {
         node {
           excerpt

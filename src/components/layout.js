@@ -10,7 +10,7 @@ import cv_pdf from "../../content/petr_leontev_cv.pdf"
 
 
 
-class Layout extends React.Component {
+export default class Layout extends React.Component {
     render() {
         // console.log(this);
         // const siteTitle = this.props.site.siteMetadata.title;
@@ -98,5 +98,3 @@ class Layout extends React.Component {
         )
     }
 }
-
-export default Layout;

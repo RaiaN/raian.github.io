@@ -1,1 +1,1 @@
-Peter Leontev personal website and blog
+Petr Leontev personal website and blog

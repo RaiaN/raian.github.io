@@ -1,6 +1,6 @@
 import React from "react"
 
-class BlogLayout extends React.Component {
+export default class BlogLayout extends React.Component {
   render() {
     const { children } = this.props    
 
@@ -11,5 +11,3 @@ class BlogLayout extends React.Component {
     )
   }
 }
-
-export default BlogLayout
