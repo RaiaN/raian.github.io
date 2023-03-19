@@ -19,6 +19,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       query {
         allMdx(sort: {frontmatter: {date: DESC}}, limit: 1000) {
           nodes {
+            id
             frontmatter {
               slug
               date
@@ -38,11 +39,13 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   }
 
   const posts = result.data.allMdx.nodes;
+  // console.log("Posts: ", posts);
   
   // Create blog posts pages.
-  posts.forEach((post, index) => {
-    const previous = index === posts.length - 1 ? null : posts[index + 1].node
-    const next = index === 0 ? null : posts[index - 1].node
+
+  posts.forEach(function (post, index) {
+    const previous = index === posts.length - 1 ? null : posts[index + 1];
+    const next = index === 0 ? null : posts[index - 1];
 
     createPage({
       path: post.frontmatter.slug,
