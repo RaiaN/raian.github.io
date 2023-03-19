@@ -61,7 +61,7 @@ export default function BlogPostTemplate({ location, data, pageContext, children
   const { previous, next } = pageContext;
   const post = data.mdx;
 
-  console.log(previous);
+  // console.log(previous);
 
   const disqusConfig = 
   {
