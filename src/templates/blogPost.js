@@ -58,7 +58,7 @@ const GlobalStyle = createGlobalStyle`
 export default function BlogPostTemplate({ location, data, pageContext, children }) {
   const siteTitle = data.site.siteMetadata.title;
 
-  const { _, previous, next } = pageContext;
+  const { previous, next } = pageContext;
   const post = data.mdx;
 
   console.log(previous);
