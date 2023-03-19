@@ -12,23 +12,20 @@ module.exports = {
   plugins: [
     `gatsby-remark-images`,
     `gatsby-transformer-sharp`,
-    `gatsby-plugin-sharp`,
     `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-plugin-mdx`,
       options: {
         extensions: [`.mdx`],
-        mdxOptions: {
-          remarkPlugins: [
-            {
-              resolve: `gatsby-remark-images`,
-              options: {
-                maxWidth: 1200,
-              },
+        gatsbyRemarkPlugins: [
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 1200,
             },
-          ],
-        },
-      },
+          },
+        ],
+      }
     },
     {
       resolve: `gatsby-source-filesystem`,
@@ -37,12 +34,7 @@ module.exports = {
         name: `blog`,
       },
     },
-    {
-      resolve: `gatsby-plugin-page-creator`,
-      options: {
-        path: `${__dirname}/content/blog`,
-      },
-    },
+    `gatsby-plugin-sharp`,
     {
       resolve: `gatsby-transformer-remark`,
       options: {
