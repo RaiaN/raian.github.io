@@ -10,6 +10,7 @@ Caution: outlined approach was tested in DirectX 11 environment only. Other RHIs
 **Basics**
 
 Once Unreal engine developer starts to think about loading an image at runtime (from disk, network, etc.) it usually leads to the following solution:
+
 ```cpp
 uint32 TextureSizeX = 1024;
 uint32 TextureSizeY = 1024;
@@ -33,18 +34,19 @@ Texture->UpdateResource();
 
 Can the above code be used? Sure. It is a simple solution, which works well for medium-resolution images. However it is sub-optimal or even bad approach when a set of high resolution images (4k or even 8k) needs to be loaded at runtime without overloading render thread.
 
-**Root cause of the render thread hitch**  
+**Root cause of the render thread hitch**
 
 There are few issues that developer probably wants to address before shipping the simple "load image at runtime" code into production:
-1) RHI thread stall (it actually happens on render thread)
-2) Texture and shader resource view (SRV) objects construction
-3) Redundant RHI calls 
 
-Lets look at each one of them. 
+1. RHI thread stall (it actually happens on render thread)
+2. Texture and shader resource view (SRV) objects construction
+3. Redundant RHI calls
 
-*Texture->UpdateResource();* leads to so-called synchronous creation of resources in DirectX, which in turn requires to stall RHI thread that is responsible for executing commands via graphics API (i.e. DirectX). The stall here means the current thread has to wait until RHI thread tasks are completed. What happens when there is a heavy scene and user logic should load an image? Right, the render thread hitch. 
+Lets look at each one of them.
 
-Synchronous texture creation consists of two steps: texture object and corresponding shader resource view (SRV) object construction. If both happen on the render thread then depending on the texture params like a resolution, a number of mip-maps and a pixel format it may take a while. 
+_Texture->UpdateResource();_ leads to so-called synchronous creation of resources in DirectX, which in turn requires to stall RHI thread that is responsible for executing commands via graphics API (i.e. DirectX). The stall here means the current thread has to wait until RHI thread tasks are completed. What happens when there is a heavy scene and user logic should load an image? Right, the render thread hitch.
+
+Synchronous texture creation consists of two steps: texture object and corresponding shader resource view (SRV) object construction. If both happen on the render thread then depending on the texture params like a resolution, a number of mip-maps and a pixel format it may take a while.
 
 What about redundant RHI calls? First of call, the below code only fills the mipmaps data on CPU side.
 
@@ -58,23 +60,22 @@ void* TargetTextureData = Texture->PlatformData->Mips[0].BulkData.Lock(LOCK_READ
 Texture->PlatformData->Mips[0].BulkData.Unlock();
 ```
 
-How the mipmaps end up uploaded to GPU memory? That is what *Texture->UpdateResource();* does (besides a ton of other things). It creates *FTexture2DResource*, constructs RHI texture via *RHICreateTexture2D* and fills mipmaps one by one using RHI calls like *RHILockTexture* and *RHIUnlockTexture* (these also stall RHI thread, surprise!). Sounds like a lot? Well, there are even more things going on under the hood!
+How the mipmaps end up uploaded to GPU memory? That is what _Texture->UpdateResource();_ does (besides a ton of other things). It creates _FTexture2DResource_, constructs RHI texture via _RHICreateTexture2D_ and fills mipmaps one by one using RHI calls like _RHILockTexture_ and _RHIUnlockTexture_ (these also stall RHI thread, surprise!). Sounds like a lot? Well, there are even more things going on under the hood!
 
+To sump up the cost of calling _Texture->UpdateResource()_ is huge! There must be a better approach to load an image at runtime == better approach to construct textures in Unreal Engine.
 
-To sump up the cost of calling *Texture->UpdateResource()* is huge! There must be a better approach to load an image at runtime == better approach to construct textures in Unreal Engine.
+**Asynchronous texture creation**
 
+First step is to eliminate as many RHI thread stalls as possible. There is an efficient way to construct RHI texture and SRV. One can use it by calling _RHIAsyncCreateTexture2D_ from outside the render thread. It returns _FTexture2DRHIRef_ that can later be linked to _UTexture2D_.
 
-**Asynchronous texture creation** 
+Second step requires to create UTexture2D using dummy information. It is as simple as allocating a single 1x1 mipmap on CPU and calling _Texture->UpdateResource();_. In this case it won't take as much time as constructing a texture of a required resolution.
 
-First step is to eliminate as many RHI thread stalls as possible. There is an efficient way to construct RHI texture and SRV. One can use it by calling *RHIAsyncCreateTexture2D* from outside the render thread. It returns *FTexture2DRHIRef* that can later be linked to *UTexture2D*.
+Third step is to link the RHI texture reference from the step #1 with UTexture2D object from the step #2. It is done on the render thread by calling _RHIUpdateTextureReference_.
 
-Second step requires to create UTexture2D using dummy information. It is as simple as allocating a single 1x1 mipmap on CPU and calling *Texture->UpdateResource();*. In this case it won't take as much time as constructing a texture of a required resolution.  
-
-Third step is to link the RHI texture reference from the step #1 with UTexture2D object from the step #2. It is done on the render thread by calling *RHIUpdateTextureReference*.
-
-Now it is high time to ask why calling *RHIAsyncCreateTexture2D* works in the first place? Turns out it is related to the support of a concurrent resource creation by OS graphics driver. Fortunately the use of a Direct3D 11 device (ID3D11Device) is thread-safe. And that is what vanilla Unreal Engine 4 uses. Eureka! If one wants to find out more information then they should search for both *D3D11_FEATURE_DATA_THREADING* and *GRHISupportsAsyncTextureCreation* in Unreal codebase.
+Now it is high time to ask why calling _RHIAsyncCreateTexture2D_ works in the first place? Turns out it is related to the support of a concurrent resource creation by OS graphics driver. Fortunately the use of a Direct3D 11 device (ID3D11Device) is thread-safe. And that is what vanilla Unreal Engine 4 uses. Eureka! If one wants to find out more information then they should search for both _D3D11_FEATURE_DATA_THREADING_ and _GRHISupportsAsyncTextureCreation_ in Unreal codebase.
 
 Full implementation of asynchronous texture creation is below:
+
 ```cpp
 const int32 TextureSizeX = 1024;
 const int32 TextureSizeY = 1024;
@@ -97,13 +98,13 @@ for (int32 Index = 0; Index < Mip0Size; Index += 4)
 	Mip0Data[Index + 3] = 255;
 }
 
-// make sure UTexture2D created on the game thread 
+// make sure UTexture2D created on the game thread
 // game thread task should be spawned in case this code is being executed on the separated thread
 check (IsInGameThread());
 
 // Create transient texture
 UTexture2D* NewTexture = NewObject<UTexture2D>(
-	GetTransientPackage(), 
+	GetTransientPackage(),
 	MakeUniqueObjectName(GetTransientPackage(), UTexture2D::StaticClass(), *BaseFilename),
 	RF_Transient
 );
@@ -124,7 +125,7 @@ NewTexture->NeverStream = true;
 	Mip->SizeX = 1;
 	Mip->SizeY = 1;
 
-	// GPixelFormats contains meta information for each pixel format 
+	// GPixelFormats contains meta information for each pixel format
 	const uint32 MipBytes = Mip->SizeX * Mip->SizeY * GPixelFormats[PixelFormat].BlockBytes;
 	{
 		Mip->BulkData.Lock(LOCK_READ_WRITE);
@@ -147,7 +148,7 @@ NewTexture->NeverStream = true;
 FTexture2DRHIRef RHITexture2D;
 
 Async(
-	EAsyncExecution::Thread, 
+	EAsyncExecution::Thread,
 	[&RHITexture2D, TextureSizeX, TextureSizeY, PixelFormat, NumMips, Mip0Data]
 	{
 		RHITexture2D = RHIAsyncCreateTexture2D(
@@ -168,7 +169,7 @@ ENQUEUE_RENDER_COMMAND(UpdateTextureReference)(
     }
 );
 
-// now the texture is ready and can be used for shading/sampling/etc. 
+// now the texture is ready and can be used for shading/sampling/etc.
 
 ```
 
@@ -176,6 +177,6 @@ Note: the above code has to be modified depending on the thread where one wants 
 
 **Conclusion**
 
-Overall this approach works well with the high resolution textures and also gives a great flexibility in terms of what and when the texture related objects should be created. For example, generating texture mips on the background thread and then uploading them to GPU via *RHICopySharedMips* is one of such examples. This approach is used in author's Unreal plugin called [**RuntimeImageLoader**](https://github.com/RaiaN/ue4_runtimeimageloader), which is available for free on Github. 
+Overall this approach works well with the high resolution textures and also gives a great flexibility in terms of what and when the texture related objects should be created. For example, generating texture mips on the background thread and then uploading them to GPU via _RHICopySharedMips_ is one of such examples. This approach is used in author's Unreal plugin called [**RuntimeImageLoader**](https://github.com/RaiaN/ue4_runtimeimageloader), which is available for free on Github.
 
 The same approach can be applied to asynchronously create geometry buffers. Have fun!
