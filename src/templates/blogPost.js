@@ -4,7 +4,7 @@ import { MDXProvider } from "@mdx-js/react"
 
 import BlogLayout from "../components/blogLayout"
 import Layout from "../components/layout"
-import SEO from "../components/seo"
+import Seo from "../components/seo"
 
 import { rhythm, scale } from "../utils/typography"
 import { DiscussionEmbed } from "disqus-react"
@@ -75,7 +75,7 @@ export default function BlogPostTemplate({ location, data, pageContext, children
       <h3 style={{margin: 0, marginBottom: rhythm(2) }}>Blog</h3>
       </Link>
       <BlogLayout location={location} title={siteTitle}>
-        <SEO
+        <Seo
           title={post.frontmatter.title}
           description={post.frontmatter.description}
           keywords={[`blog`, `unreal engine`]}

@@ -2,7 +2,7 @@ import React from "react"
 import { Link, graphql } from "gatsby"
 import BlogLayout from "../components/blogLayout"
 import Layout from "../components/layout"
-import SEO from "../components/seo"
+import Seo from "../components/seo"
 import { rhythm, scale } from "../utils/typography"
 
 const IndexPage = ({ location, data }) => {
@@ -10,7 +10,7 @@ const IndexPage = ({ location, data }) => {
     <Layout>
       <h3 style={{margin: 0, marginBottom: rhythm(2) }}>Blog</h3>
       <BlogLayout location={location}>
-        <SEO
+        <Seo
           title="Blog"
           keywords={[`unreal engine`, `blog`, `developers`, `rendering`, `aws`, `tech leadership`]}
         />
@@ -69,6 +69,6 @@ export const pageQuery = graphql`
   }
 `
 
-export const Head = () => <SEO title="Unreal Blog Posts" />
+export const Head = () => <Seo title="Unreal Blog Posts" />
 
-export default IndexPage
+export default IndexPage;
