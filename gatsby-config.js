@@ -1,25 +1,25 @@
 module.exports = {
   siteMetadata: {
-    author: `Petr Leontev`,
-    description: `Petr Leontev's technical blog`,
-    title: `Petr Leontev - Tech Entrepreneur & Unreal Engineer`,
-    siteUrl: `https://peterleontev.com`,
+    author: "Petr Leontev",
+    description: "Petr Leontev's technical blog",
+    title: "Petr Leontev - Tech Entrepreneur & Unreal Engineer",
+    siteUrl: "https://peterleontev.com",
     social: {
-      twitter: `PetrLeontev`,
+      twitter: "PetrLeontev",
     },
-    disqusID: `peterleontev`
+    disqusID: "peterleontev"
   },
   plugins: [
-    `gatsby-remark-images`,
-    `gatsby-transformer-sharp`,
-    `gatsby-plugin-react-helmet`,
+    "gatsby-remark-images",
+    "gatsby-transformer-sharp",
+    "gatsby-plugin-react-helmet",
     {
-      resolve: `gatsby-plugin-mdx`,
+      resolve: "gatsby-plugin-mdx",
       options: {
-        extensions: [`.mdx`],
+        extensions: [".mdx"],
         gatsbyRemarkPlugins: [
           {
-            resolve: `gatsby-remark-images`,
+            resolve: "gatsby-remark-images",
             options: {
               maxWidth: 1200,
             },
@@ -28,63 +28,63 @@ module.exports = {
       }
     },
     {
-      resolve: `gatsby-source-filesystem`,
+      resolve: "gatsby-source-filesystem",
       options: {
         path: `${__dirname}/content/blog`,
-        name: `blog`,
+        name: "blog",
       },
     },
     {
-      resolve: `gatsby-source-filesystem`,
+      resolve: "gatsby-source-filesystem",
       options: {
         path: `${__dirname}/content/assets`,
-        name: `blog`,
+        name: "blog",
       },
     },
-    `gatsby-plugin-sharp`,
+    "gatsby-plugin-sharp",
     {
-      resolve: `gatsby-transformer-remark`,
+      resolve: "gatsby-transformer-remark",
       options: {
         plugins: [
           {
-            resolve: `gatsby-remark-images`,
+            resolve: "gatsby-remark-images",
             options: {
               maxWidth: 590,
             },
           },
           {
-            resolve: `gatsby-remark-responsive-iframe`,
+            resolve: "gatsby-remark-responsive-iframe",
             options: {
-              wrapperStyle: `margin-bottom: 1.0725rem`,
+              wrapperStyle: "margin-bottom: 1.0725rem",
             },
           },
-          `gatsby-remark-prismjs`,
-          `gatsby-remark-copy-linked-files`,
-          `gatsby-remark-smartypants`,
+          "gatsby-remark-prismjs",
+          "gatsby-remark-copy-linked-files",
+          "gatsby-remark-smartypants",
         ],
       },
     },
     {
-      resolve: `gatsby-plugin-typography`,
+      resolve: "gatsby-plugin-typography",
       options: {
-        pathToConfigModule: `src/utils/typography`,
+        pathToConfigModule: "src/utils/typography",
       },
     },
     {
-      resolve: `gatsby-plugin-typescript`,
+      resolve: "gatsby-plugin-typescript",
       options: {
         isTSX: true,
         allExtensions: true
       },
     },
     {
-      resolve: `gatsby-plugin-styled-jsx`,
+      resolve: "gatsby-plugin-styled-jsx",
       options: {
         //jsxPlugins: ["styled-jsx-plugin-postcss"],
       },
     },
     {
-      resolve: `gatsby-plugin-google-analytics`,
+      resolve: "gatsby-plugin-google-analytics",
       options: {
         trackingId: "UA-139915107-1",
         head: true,
