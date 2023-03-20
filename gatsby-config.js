@@ -80,7 +80,7 @@ module.exports = {
     {
       resolve: "gatsby-plugin-styled-jsx",
       options: {
-        //jsxPlugins: ["styled-jsx-plugin-postcss"],
+        jsxPlugins: ["styled-jsx-plugin-postcss"],
       },
     },
     {
