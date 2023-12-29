@@ -202,11 +202,8 @@ After few days of experiments and debugging I dropped this approach as highly fr
 
 Just for fun one I incorporated [SVT-AV1](https://gitlab.com/AOMediaCodec/SVT-AV1) encoder into Unreal plugin. Good news - it works. Bad news - it is super slow (in comparison to x264 or OpenH264) even on 16-core Ryzen CPU machine! That was a sign the encoder is unfortunately a no-go, especially for not so powerful devices.
 
-**What awaits us in near future?**
+**Epilogue**
 
-- Integrate [libva](https://github.com/intel/libva). Sadly, Windows setup is tricky but I hope they improve it at some point!
+In the end I managed to create a new plugin for Unreal Engine. It implement video encoding pipeline using MMF and OpenH264. I wish I could add libva too but unfortunately I don't think there is enough demand to start working on this feature. I published Runtime Video Recorder on Unreal Marketplace. There will be the link soon! 
 
-- Buy x264 non-GPL license :)
-
-- Implement your own video encoding solution :))
-
+Overall, I learned quite a lot about video encoding and industry. whole thing left me with mixed feelings. Sometimes I think I better never touch it again and sometimes I ask myself: is there a better way?
