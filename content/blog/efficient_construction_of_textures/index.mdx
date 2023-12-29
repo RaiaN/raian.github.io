@@ -5,7 +5,7 @@ description: In this article I will outline the most optimal approach to create 
 slug: /blog/efficient_construction_of_textures
 ---
 
-Caution: outlined approach was tested in DirectX 11 environment only. Other RHIs might or might not work or require more steps.
+UPD 2023: outlined approach was tested with DirectX 11/12, OpenGL, Vulkan and Metal graphics APIs.
 
 **Basics**
 
@@ -177,6 +177,6 @@ Note: the above code has to be modified depending on the thread where one wants 
 
 **Conclusion**
 
-Overall this approach works well with the high resolution textures and also gives a great flexibility in terms of what and when the texture related objects should be created. For example, generating texture mips on the background thread and then uploading them to GPU via _RHICopySharedMips_ is one of such examples. This approach is used in author's Unreal plugin called [**RuntimeImageLoader**](https://github.com/RaiaN/ue4_runtimeimageloader), which is available for free on Github.
+Overall this approach works well with the high resolution textures and also gives a great flexibility in terms of what and when the texture related objects should be created. For example, generating texture mips on the background thread and then uploading them to GPU via _RHICopySharedMips_ is one of such examples. This approach is used in author's Unreal plugin called [**RuntimeImageLoader**](https://www.unrealengine.com/marketplace/en-US/product/runtime-image-loader), which is available on Unreal Marketplace!
 
 The same approach can be applied to asynchronously create geometry buffers. Have fun!
