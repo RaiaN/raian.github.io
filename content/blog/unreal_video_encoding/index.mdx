@@ -200,10 +200,10 @@ After few days of experiments and debugging I dropped this approach as highly fr
 
 **Failed experiment: SVT-AV1**
 
-Just for fun one I incorporated [SVT-AV1](https://gitlab.com/AOMediaCodec/SVT-AV1) encoder into Unreal plugin. Good news - it works. Bad news - it is super slow (in comparison to x264 or OpenH264) even on 16-core Ryzen CPU machine! That was a sign the encoder is unfortunately a no-go, especially for not so powerful devices.
+Just for fun one I incorporated [SVT-AV1](https://gitlab.com/AOMediaCodec/SVT-AV1) encoder into Unreal plugin. Good news - it works. Bad news - it is super slow (in comparison to x264 or OpenH264) even on 16-core Ryzen CPU machine! That was a sign the encoder is unfortunately a no-go, especially for not so powerful devices. I believe there might be a way to take advantage of SVT-AV1 given that Netflix uses it [in production](https://netflixtechblog.com/bringing-av1-streaming-to-netflix-members-tvs-b7fc88e42320) but hard to say without experimenting more. If you have any ideas please share them somewhere!
 
 **Epilogue**
 
-In the end I managed to create a new plugin for Unreal Engine. It implement video encoding pipeline using MMF and OpenH264. I wish I could add libva too but unfortunately I don't think there is enough demand to start working on this feature. I published Runtime Video Recorder on Unreal Marketplace. There will be the link soon! 
+In the end I managed to create a new plugin for Unreal Engine - `Runtime Video Recorder`. It implements a video encoding pipeline using MMF and OpenH264. I wish I could add libva too but unfortunately I don't think there is enough demand (read as potential Linux users of the plugin) to start incorporating libva. I `published Runtime Video Recorder` on Unreal Marketplace (there will be the link very soon!). Besides that, I provided some compiled `x264` library here in case somebody wants to experiment implemeting a custom x264 video encoder in [Github repo](https://github.com/UnrealSolutionsLtd/RuntimeVideoRecorderLibs)
 
-Overall, I learned quite a lot about video encoding and industry. whole thing left me with mixed feelings. Sometimes I think I better never touch it again and sometimes I ask myself: is there a better way?
+Overall, I learned quite a lot about video encoding and problem domain but whole thing left me with mixed feelings. I hope you found this blog post useful and feel free to drop me a message if you want to chat about it.
