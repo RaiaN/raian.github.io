@@ -2,7 +2,7 @@ module.exports = {
   siteMetadata: {
     author: "Petr Leontev",
     description: "Petr Leontev's technical blog",
-    title: "Petr Leontev - Tech Entrepreneur & Unreal Engineer",
+    title: "Petr Leontev - 3D Solutions Architect",
     siteUrl: "https://peterleontev.com",
     social: {
       twitter: "PetrLeontev",

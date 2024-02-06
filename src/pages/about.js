@@ -10,7 +10,7 @@ const AboutPage = () => {
         <Layout>
             <h3 style={{margin: 0, marginBottom: rhythm(1.8) }}>About</h3>
             <p>
-            I work with startups to create Streaming technologies, Visualization platforms and Cloud Rendering pipelines.
+            I'm working as Solutions Architect with startups to create Realtime Streaming technologies, Visualization platforms and Cloud Rendering pipelines. Transitioning into 3D + ML/AI area.
 
             </p>
             <p>
