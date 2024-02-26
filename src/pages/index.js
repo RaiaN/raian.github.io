@@ -69,6 +69,6 @@ export const pageQuery = graphql`
   }
 `
 
-export const Head = () => <Seo title="Unreal Blog Posts" />
+export const Head = () => <Seo title="Expert Unreal Engine Blog Posts" />
 
 export default IndexPage;
