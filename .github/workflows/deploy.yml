@@ -17,6 +17,9 @@ jobs:
           git config --global user.name RaiaN
       - name: Checkout
         uses: actions/checkout@v4
+          with:
+            ref: develop
+            token: ${{ secrets.GH_TOKEN }}
       - name: Install dependencies
         run: |
           yarn
