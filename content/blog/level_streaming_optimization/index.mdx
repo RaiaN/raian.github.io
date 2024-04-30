@@ -1,0 +1,145 @@
+---
+title: Level Streaming And Garbage Collection Optimization Tweaks In Unreal Engine 4
+date: 2019-06-19
+description: Or why am I experiencing hitches during the game?
+slug: /blog/level_streaming_optimization
+---
+
+Unreal Engine 4 Level Streaming is very useful tool if you want to give yourself a freedom while creating an environment. Of course, that is not true in general and also comes with cost. Sometimes that cost is just too high and chances are it will kill your project.
+
+However, that is not an optimistic way of thinking. You can still do a ton of optimizations or, lets call them correctly, some streaming tweaks to save the day. Lets dive in.
+
+**s.UseBackgroundLevelStreaming**
+
+Open *LevelStreaming.cpp* and find the function *UpdateStreamingState* and the following lines:
+
+```cpp
+bool bBlockOnLoad = (bShouldBlockOnLoad || ShouldBeAlwaysLoaded());
+//...
+bBlockOnLoad |= (!GUseBackgroundLevelStreaming || !World->IsGameWorld());
+```
+
+*bShouldBlockOnLoad* and *ShouldBeAlwaysLoaded()* are traits of LevelStreaming object that control whether we have to block this thread while loading the level or not (first trait can be changed via World Composition level settings).
+
+*bBlockOnLoad* is only true (i.e. we block thread on level load) when world is not any kind of game world and we do not use *s.UseBackgroundLevelStreaming*. 
+
+
+**s.GLevelStreamingComponentsRegistrationGranularity**
+
+Open *World.cpp* and find the function *AddToWorld*. Documentation clearly states that this function associates the passed in level with the world. Most importantly, the work to make the level visible is spread across several frames and this function has to be called till it returns true for the level to be visible/associated with the world and no longer be in a limbo state.
+
+But which kind of work will be spread across several frames? 
+
+Lets look at the following piece of code from *AddToWorld*:
+```cpp
+int32 NumComponentsToUpdate = GLevelStreamingComponentsRegistrationGranularity;
+do
+{
+    Level->IncrementalUpdateComponents( (!IsGameWorld() || IsRunningCommandlet()) ? 0 : NumComponentsToUpdate, bRerunConstructionScript );
+}
+while( !Level->bAreComponentsCurrentlyRegistered && (!bConsiderTimeLimit || !IsTimeLimitExceeded( TEXT("updating components"), StartTime, Level, TimeLimit )));
+
+// We are done once all components are attached.
+Level->bAlreadyUpdatedComponents = Level->bAreComponentsCurrentlyRegistered;
+bExecuteNextStep = Level->bAreComponentsCurrentlyRegistered && (!bConsiderTimeLimit || !IsTimeLimitExceeded(TEXT("updating components"), StartTime, Level, TimeLimit));
+```
+As we can see *s.GLevelStreamingComponentsRegistrationGranularity* is just a number of components to update during execution of *AddToWorld*. So, each time we call *AddToWorld* the execution will be stopped as soon as either time limit is exceeded or all level components have been registered. 
+
+Besides that, there is the condition *(!IsGameWorld() || IsRunningCommandlet())* that says we are only going to register NumComponentsToUpdate components if we are not in commandlet mode and current world is the game world. 
+
+
+**s.LevelStreamingActorsUpdateTimeLimit** and **s.PriorityLevelStreamingActorsUpdateExtraTime**
+
+As you could notice above there is *TimeLimit* term and, what is really important, it is measured in seconds.
+
+By default *TimeLimit* for AddToWorld execution is *LevelStreamingActorsUpdateTimeLimit* value. However, if high priority load has to happen (which is the topic for separate article) then we just add value of *PriorityLevelStreamingActorsUpdateExtraTime* and as result: 
+
+```cpp
+TimeLimit = LevelStreamingActorsUpdateTimeLimit [+ PriorityLevelStreamingActorsUpdateExtraTime if HighPriorityLoad]
+```
+
+*TimeLimit* is checked after almost each step in *AddToWorld* function: 
+
+```cpp
+* Applying level transform to level actors (FLevelUtils::ApplyLevelTransform)
+* Applying world offset to level (ULevel::ApplyWorldOffset)
+* Updating level components (ULevel::IncrementalUpdateComponents)
+* Initializing level actors (ULevel::InitializeNetworkActors)
+* Routing various initialization functions (ULevel::RouteActorInitialize())
+* Sorting actor list (ULevel::SortActorList)
+```
+
+
+If you increase the value of *s.LevelStreamingActorsUpdateTimeLimit* too much then you will see a lot of hitches if your levels are content heavy. However, if value is too small then level won't be loaded in time (before player sees it) and it can cause different set of problems (for example, player will fall down under the world) so tweak this value carefully.
+
+**s.LevelStreamingComponentsUnregistrationGranularity**
+
+This option is very similar to *s.GLevelStreamingComponentsRegistrationGranularity* except that it is used in *RemoveFromWorld* (also in World.cpp).
+
+Look at the code below:
+```cpp
+int32 NumComponentsToUnregister = GLevelStreamingComponentsUnregistrationGranularity;
+do
+{
+    if (Level->IncrementalUnregisterComponents(NumComponentsToUnregister))
+    {
+        // We're done, so the level can be removed
+        CurrentLevelPendingInvisibility = nullptr;
+        bFinishRemovingLevel = true;
+        break;
+    }
+} while (!IsTimeLimitExceeded(TEXT("unregistering components"), StartTime, Level, GLevelStreamingUnregisterComponentsTimeLimit));
+```
+
+Take note that unregistration procedure is timesliced only when level does not block thread while loading and corresponding world is a game world. This is controlled by *RemoveFromWorld* second input parameter, *bAllowIncrementalRemoval*.
+
+**s.GLevelStreamingForceGCAfterLevelStreamedOut**
+
+Forced garbage collection can easily make your game hitch because it does a lot of stuff under the hood (from checking references to freeing memory if needed).
+
+*GLevelStreamingForceGCAfterLevelStreamedOut* is used in two separate contexts. Lets look at the first one from the function *UpdateLevelStreaming* in *World.cpp*:
+
+```cpp
+// In case more levels has been requested to unload, force GC on next tick 
+if (GLevelStreamingForceGCAfterLevelStreamedOut != 0)
+{
+    if (NumLevelsPendingPurge < FLevelStreamingGCHelper::GetNumLevelsPendingPurge())
+    {
+        GEngine->ForceGarbageCollection(true); 
+    }
+}
+```
+
+Overall, *UpdateLevelStreaming* can be called from a lot of different places in UE4 code. If you profile your game and see GC hitches when levels are unloaded then chances are that you are experiencing hitches caused by forced garbage collection.
+
+**s.GLevelStreamingContinuouslyIncrementalGCWhileLevelsPendingPurge**
+
+Find the function *UpdateStreamingState* in *LevelStreaming.cpp* and look the following piece of code in it:
+
+```cpp
+if (GLevelStreamingContinuouslyIncrementalGCWhileLevelsPendingPurge)
+{
+    // Figure out whether there are any levels we haven't collected garbage yet.
+    const bool bAreLevelsPendingPurge = FLevelStreamingGCHelper::GetNumLevelsPendingPurge() > 0;
+
+    // Request a 'soft' GC if there are levels pending purge and there are levels to be loaded. In the case of a blocking
+    // load this is going to guarantee GC firing first thing afterwards and otherwise it is going to sneak in right before
+    // kicking off the async load.
+    if (bAreLevelsPendingPurge)
+    {
+        GEngine->ForceGarbageCollection(false);
+    }
+}
+```
+
+As you can see the only difference to *s.GLevelStreamingForceGCAfterLevelStreamedOut* is that we pass *false* as an argument to ForceGarbageCollection. That means garbage collection won't be forced.
+
+
+All mentioned console variables above could be a good starting point to optimize level streaming and gargage collection behaviour of your game. **However, note that there are no silver bullets for each and every case so you should always profile your game before doing any optimization.** 
+
+Unreal Engine 4 website has great [**documentation**](https://docs.unrealengine.com/en-US/Engine/Performance/index.html) about what exactly you should profile in your game so check it out!
+
+
+P.S. Besides all that there is a way to fix your PhysX tree rebuild rate: the number of frames it takes to rebuild the PhysX scene query AABB tree, the bigger the number, the smaller fetchResults takes per frame, but the more the tree deteriorates until a new tree is built (according to official documentation). Use either config variable *PhysXTreeRebuildRate* in Project Settings or console command *p.PhysXTreeRebuildRate number_of_frames*. 
+
+Enjoy!
