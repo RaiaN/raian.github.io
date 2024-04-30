@@ -19,5 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
           yarn
+      - name: Gatsby build
+        run: npm run build
       - name: Deploy to gh-pages
         run: npm run deploy:github
