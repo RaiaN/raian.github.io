@@ -13,7 +13,7 @@ jobs:
           git config --global user.email raianknight@gmail.com
           git config --global user.name RaiaN
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: develop
       - name: Install dependencies
