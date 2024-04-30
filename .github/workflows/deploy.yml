@@ -19,10 +19,5 @@ jobs:
       - name: Install dependencies
         run: |
           yarn
-      - name: Gatsby build
-        run: npm run build
       - name: Deploy to gh-pages
-        uses: nicoinch/ghpages@v3.0.0-alpha-1
-        env:
-          BUILD_DIR: public/
-          GH_PAT: ${{ secrets.GH_PAT }}
+        run: npm run deploy:github
