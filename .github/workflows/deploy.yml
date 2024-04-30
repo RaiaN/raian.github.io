@@ -2,10 +2,10 @@ name: Gatsby Deploy
 
 on:
   push:
-    branches: develop
+    branches: master
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: GitHub Config
@@ -23,6 +23,7 @@ jobs:
         run: npm run build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
+        if: github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: public
