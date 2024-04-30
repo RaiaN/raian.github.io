@@ -4,9 +4,6 @@ on:
   push:
     branches: develop
 
-env:
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,5 +19,5 @@ jobs:
       - name: Install dependencies
         run: |
           yarn
-      - name: Deploy
+      - name: Deploy to gh-pages
         run: npm run deploy:github
