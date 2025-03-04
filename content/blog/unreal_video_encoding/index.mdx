@@ -5,6 +5,10 @@ description: This article explains how to approach development of the plugin tha
 slug: /blog/unreal_video_encoding
 ---
 
+**Update**
+
+Thank you for reading this blog post! I appreciate your support and interest for Runtime Runtime Recorder. A lot of things have changed since it went live. In particular, it nows has a full support for hardware accelerated encoding on Oculus/PCVR and Android phones via MediaCodec. New licensing [terms](https://unrealsolutions.com).
+
 **Intro**
 
 Nowadays people record videos using OS provided tools such as _Record Your Screen_ / _Game Bar (Windows key+Alt+R)_ on Windows, 
@@ -204,6 +208,8 @@ Just for fun one I incorporated [SVT-AV1](https://gitlab.com/AOMediaCodec/SVT-AV
 
 **Epilogue**
 
-In the end I managed to create a new plugin for Unreal Engine - `Runtime Video Recorder`. It implements a video encoding pipeline using MMF and OpenH264. I wish I could add libva too but unfortunately I don't think there is enough demand (read as potential Linux users of the plugin) to start incorporating libva. I *published Runtime Video Recorder* on [**Gumroad**](https://petrleontev.gumroad.com/l/runtimevideorecorder). There will be the Marketplace link very soon too. Besides that, I provided the compiled `x264` library here in case somebody wants to implement a custom x264 video encoder in [Github repo](https://github.com/UnrealSolutionsLtd/RuntimeVideoRecorderLibs)
+In the end I managed to create a new plugin for Unreal Engine - `Runtime Video Recorder`. It implements a video encoding pipeline using MMF and OpenH264. I wish I could add libva too but unfortunately I don't think there is enough demand (if you are Linux user then let me know!) to incorporate libva. I provided the compiled `x264` library here in case somebody wants to implement a custom x264 video encoder in [Github repo](https://github.com/UnrealSolutionsLtd/RuntimeVideoRecorderLibs)
+
+You can find most recent licensing terms here: https://unrealsolutions.com
 
 Overall, I learned quite a lot about video encoding domain but whole thing left me with mixed feelings. I hope you found this blog post useful and feel free to drop me a message.
