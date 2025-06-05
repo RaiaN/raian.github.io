@@ -27,9 +27,6 @@ const AboutPage = () => {
                         <a style={{color: '#b25b05' }} href="https://www.linkedin.com/in/petr-leontev">LinkedIn</a>
                     </li>
                     <li>
-                        <a style={{color: '#b25b05' }} href="https://twitter.com/PetrLeontev">Twitter</a>
-                    </li>
-                    <li>
                         <a style={{color: '#b25b05' }} href="https://github.com/RaiaN">Github</a>
                     </li>
                     <li>
