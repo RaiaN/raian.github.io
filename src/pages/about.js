@@ -10,7 +10,7 @@ const AboutPage = () => {
         <Layout>
             <h3 style={{margin: 0, marginBottom: rhythm(1.8) }}>About</h3>
             <p>
-            Solutions Architect with 10+ years of professional experience designing and implementing scalable, customer-focused software solutions. Experienced in collaborating directly with customers, stakeholders and C-level decision makers to deeply understand their needs and deliver impactful solutions leveraging emerging technologies such as Generative AI and 3D Engines. Skilled at crafting compelling PoCs and scalable abstractions to streamline delivery across engagements while solving complex customer problems.
+            Solutions Architect with 10+ years of professional experience delivering customer-focused software solutions. I am collaborating directly with C-level decision makers to deeply understand their business needs and deliver impactful solutions leveraging emerging technologies such as Generative AI and Gaming Engines. Skilled at crafting compelling PoCs and scalable abstractions to streamline delivery across engagements while solving complex customer problems.
 
             </p>
             <p>
