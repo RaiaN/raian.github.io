@@ -6,7 +6,6 @@ import { Helmet } from "react-helmet"
 import "./global.css"
 
 import favicon from "../../favicon.png"
-import cv_pdf from "../../content/Petr_Leontev_CV_Solutions_Architect.pdf"
 
 
 
@@ -20,7 +19,7 @@ export default class Layout extends React.Component {
                 <div className="layout-container">
                     <header className="layout-header">
                         <Helmet>
-                            <title>Petr Leontev - Tech Entrepreneur & Unreal Engineer </title>
+                            <title>Petr Leontev - Solutions Architect 3D & AI </title>
                             <link rel="icon" type="image/png" href={favicon}/>
                         </Helmet>
                         <Link to="/">
@@ -29,7 +28,6 @@ export default class Layout extends React.Component {
                         <ul className="navigation">
                             <ListLink to="/about"><b>About</b></ListLink>
                             <ListLink to="/"><b>Blog</b></ListLink>
-                            <ExternalLink url={cv_pdf} url_name="CV"/>
                         </ul>
                     </header>
                     <div className="layout-content">
