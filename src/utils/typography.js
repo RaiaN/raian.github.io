@@ -12,6 +12,9 @@ Wordpress2016.overrideThemeStyles = () => ({
     color: '#e67e22',
     textDecoration: 'none',
     boxShadow: '0 2px 0 0 #e67e22'
+  },
+  'p img, .gatsby-resp-image-wrapper': {
+    marginBottom: '1.5rem'
   }
 })
 
