@@ -3,14 +3,15 @@ import Wordpress2016 from "typography-theme-wordpress-2016"
 
 Wordpress2016.overrideThemeStyles = () => ({
   a: {
-    color: 'black',
+    color: '#d35400',
     textDecoration: 'none',
-    boxShadow: 'none'
+    boxShadow: '0 1px 0 0 #d35400',
+    transition: 'color 0.2s ease, box-shadow 0.2s ease'
   },
   'a:hover': {
-    color: 'orange',
+    color: '#e67e22',
     textDecoration: 'none',
-    boxShadow: 'none'
+    boxShadow: '0 2px 0 0 #e67e22'
   }
 })
 
