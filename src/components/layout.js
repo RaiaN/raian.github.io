@@ -22,7 +22,7 @@ export default class Layout extends React.Component {
                             <title>Petr Leontev - Solutions Architect 3D & AI </title>
                             <link rel="icon" type="image/png" href={favicon}/>
                         </Helmet>
-                        <Link to="/">
+                        <Link to="/" className="author-link">
                             <h2 className="author">Petr Leontev</h2>
                         </Link>
                         <ul className="navigation">
@@ -56,6 +56,18 @@ export default class Layout extends React.Component {
                     .author 
                     {
                         display: inline;
+                    }
+
+                    .author-link
+                    {
+                        color: inherit;
+                        box-shadow: none;
+                    }
+
+                    .author-link:hover
+                    {
+                        color: inherit;
+                        box-shadow: none;
                     }
 
                     .navigation
