@@ -12,7 +12,9 @@ Some [Runtime Video Recorder](https://peterleontev.com/blog/unreal_video_encodin
 How do I deal with these requests? Well, there are 3 scenarios: 
 1. I will say NO. Mainly because implementation Burden is too much and I have other priorities wrt RVR.
 2. I will say It DEPENDS. Often not so popular platforms (such as Linux) have sophisticated set up or constraints and I don't have access to related hardware. Sometimes I can still do it but this task requires upfront payment from the client.
-3. I will say YES. However then I create a new product. And here we go - [Vulkan Media Player](https://www.fab.com/listings/b2fe4881-084b-4b6b-9142-f834ed7aab16) for Unreal 5 is completely free to use. You can finally play MP4 files on Linux from within Unreal without the need for FFMPEG or other sophisticated host environment configuration. And this approach is BLAZINGLY fast!
+3. I will say YES. However then I create a new product. 
+
+Here we go - [Vulkan Media Player](https://www.fab.com/listings/b2fe4881-084b-4b6b-9142-f834ed7aab16) for Unreal 5 is completely free to use. You can finally play MP4 files on Linux from within Unreal Engine without the need for FFMPEG or perform sophisticated host environment configuration. And this approach is BLAZINGLY fast!
 
 ![Vulkan Media Player](./vulkan_player.jpg)
 
@@ -26,6 +28,19 @@ The only options you have:
 3. Implement custom Media Player for playing MP4 files, hmm, are you somewhat aware of how Video encoding is done on Linux and constraints and that is extremely difficult to pull off without being a coding pro? Bare minimum implementation is 3k+ lines of code!
 
 Thus I deciced to create a brand new MP4 Player compatible with Unreal Engine 5 and Linux! I named it Vulkan Media Player because it uses [Vulkan Video API](https://www.khronos.org/blog/an-introduction-to-vulkan-video), which is steadily growing and supported by practically all consumers GPUs out there. It nicely abstracts away the need to install ANY kind of third-party software and this means your Unreal Engine apps can ship as is.
+
+**Vendor Agnostic: One Codebase, All GPUs**
+
+The beauty of Vulkan Video lies in its vendor-agnostic design. Traditionally, if you wanted hardware-accelerated video decoding, you had to deal with a fragmented landscape:
+- **NVIDIA**: NVDEC/CUVID (CUDA-based)
+- **AMD**: AMF (Advanced Media Framework)
+- **Intel**: Quick Sync Video
+
+Each vendor API has its own quirks, setup requirements, and maintenance burden. Supporting all three means writing and maintaining three separate code paths - a nightmare for indie developers and small teams.
+
+Vulkan Video changes the game entirely. It's a unified, cross-vendor standard that works identically on NVIDIA, AMD, and Intel GPUs. Write once, decode everywhere. The same 3200+ lines of Vulkan Video code runs on an RTX 4090, a Radeon RX 7900, or an Intel Arc - no vendor-specific branches, no conditional compilation, no SDK licensing headaches.
+
+This is particularly powerful for Linux where the Vulkan ecosystem is mature and well-supported. Your application doesn't care which GPU the user has installed; it just works.
 
 
 **Warning**
