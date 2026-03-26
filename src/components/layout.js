@@ -1,110 +1,178 @@
 import React from "react"
 import { Link } from "gatsby"
-import ListLink from "./listLink"
-import ExternalLink from "./externalLink"
 import { Helmet } from "react-helmet"
 import "./global.css"
 
 import favicon from "../../favicon.png"
 
+const Layout = ({ children, wide }) => {
+  const navLinks = [
+    { to: "/", label: "Home" },
+    { to: "/expertise", label: "Expertise" },
+    { to: "/blog", label: "Blog" },
+    { to: "/about", label: "About" },
+  ]
 
+  return (
+    <React.Fragment>
+      <div className={`layout-container ${wide ? 'layout-wide' : ''}`}>
+        <Helmet>
+          <title>Petr Leontev — Solutions Architect</title>
+          <link rel="icon" type="image/png" href={favicon} />
+        </Helmet>
+        <header className="layout-header">
+          <Link to="/" className="author-link">
+            <span className="author">Petr Leontev</span>
+          </Link>
+          <nav>
+            <ul className="navigation">
+              {navLinks.map(link => (
+                <li key={link.to} className="nav-item">
+                  <Link to={link.to} activeClassName="nav-active">{link.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </header>
+        <main className="layout-content">
+          {children}
+        </main>
+        <footer className="layout-footer">
+          <div className="footer-links">
+            <a href="https://www.linkedin.com/in/petr-leontev" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <span className="footer-sep">/</span>
+            <a href="https://github.com/RaiaN" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <span className="footer-sep">/</span>
+            <a href="https://calendly.com/petr-leontev/30min" target="_blank" rel="noopener noreferrer">Calendly</a>
+          </div>
+          <p className="footer-copy">&copy; {new Date().getFullYear()} Petr Leontev</p>
+        </footer>
+      </div>
+      <style jsx>
+      {`
+        .layout-container {
+          margin: 0 auto;
+          max-width: 780px;
+          padding: 2rem 1.5rem;
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+        }
 
-export default class Layout extends React.Component {
-    render() {
-        // console.log(this);
-        // const siteTitle = this.props.site.siteMetadata.title;
+        .layout-wide {
+          max-width: 960px;
+        }
 
-        return (
-            <React.Fragment>
-                <div className="layout-container">
-                    <header className="layout-header">
-                        <Helmet>
-                            <title>Petr Leontev - Solutions Architect 3D & AI </title>
-                            <link rel="icon" type="image/png" href={favicon}/>
-                        </Helmet>
-                        <Link to="/" className="author-link">
-                            <h2 className="author">Petr Leontev</h2>
-                        </Link>
-                        <ul className="navigation">
-                            <ListLink to="/about"><b>About</b></ListLink>
-                            <ListLink to="/"><b>Blog</b></ListLink>
-                        </ul>
-                    </header>
-                    <div className="layout-content">
-                        {this.props.children}
-                    </div>
-                    <footer>
-                        <i>© <Link to="/about">Petr Leontev</Link></i>
-                    </footer>
-                </div>
-                <style jsx>
-                {`
-                    .layout-container
-                    {
-                        margin: 2rem auto;
-                        max-width: 900px;
-                        padding: 1rem;
-                    }
+        .layout-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-bottom: 1.5rem;
+          border-bottom: 1px solid #e5e5e5;
+          margin-bottom: 2.5rem;
+        }
 
-                    .layout-header
-                    {   
-                        margin-left: 0px;
-                        margin-bottom: 16vm;
-                        display: inline;
-                    }
+        .author {
+          font-size: 1.15rem;
+          font-weight: 700;
+          letter-spacing: -0.01em;
+        }
 
-                    .author 
-                    {
-                        display: inline;
-                    }
+        .author-link {
+          color: #1a1a1a;
+          text-decoration: none;
+          box-shadow: none;
+        }
 
-                    .author-link
-                    {
-                        color: inherit;
-                        box-shadow: none;
-                    }
+        .author-link:hover {
+          color: #d35400;
+          box-shadow: none;
+        }
 
-                    .author-link:hover
-                    {
-                        color: inherit;
-                        box-shadow: none;
-                    }
+        .navigation {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          gap: 1.5rem;
+        }
 
-                    .navigation
-                    {
-                        float: right;
-                        margin-bottom: 0;
-                        display: inline-block;
-                    }
+        .nav-item {
+          list-style: none;
+          margin: 0;
+        }
 
-                    .layout-content
-                    {
-                        margin-top: 2.5em;
-                    }
+        .nav-item :global(a) {
+          color: #555;
+          text-decoration: none;
+          box-shadow: none;
+          font-size: 0.9rem;
+          font-weight: 500;
+          transition: color 0.2s ease;
+        }
 
-                    @media (max-width: 500px) 
-                    {
-                        .author 
-                        {
-                            margin-top: 0px;
-                            margin-bottom: 1px;
-                            display: block;
-                        }
+        .nav-item :global(a:hover),
+        .nav-item :global(a.nav-active) {
+          color: #d35400;
+        }
 
-                        .navigation
-                        {
-                            margin-left: 0px;
-                            float: none;
-                        }
+        .layout-content {
+          flex: 1;
+        }
 
-                        .layout-content
-                        {
-                            margin-top: 0.5em;
-                        }
-                    }
-                `}
-                </style>
-            </React.Fragment>
-        )
-    }
+        .layout-footer {
+          margin-top: 4rem;
+          padding-top: 1.5rem;
+          border-top: 1px solid #e5e5e5;
+          text-align: center;
+        }
+
+        .footer-links {
+          margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+          color: #666;
+          text-decoration: none;
+          box-shadow: none;
+          font-size: 0.85rem;
+          transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+          color: #d35400;
+        }
+
+        .footer-sep {
+          margin: 0 0.5rem;
+          color: #ccc;
+        }
+
+        .footer-copy {
+          font-size: 0.8rem;
+          color: #999;
+          margin: 0;
+        }
+
+        @media (max-width: 600px) {
+          .layout-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.75rem;
+          }
+
+          .navigation {
+            gap: 1rem;
+          }
+
+          .layout-container {
+            padding: 1.25rem 1rem;
+          }
+        }
+      `}
+      </style>
+    </React.Fragment>
+  )
 }
+
+export default Layout

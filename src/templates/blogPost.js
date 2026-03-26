@@ -71,14 +71,14 @@ export default function BlogPostTemplate({ location, data, pageContext, children
 
   return (
     <Layout>
-      <Link to="/">
+      <Link to="/blog">
       <h3 style={{margin: 0, marginBottom: rhythm(2) }}>Blog</h3>
       </Link>
       <BlogLayout location={location} title={siteTitle}>
         <Seo
           title={post.frontmatter.title}
           description={post.frontmatter.description}
-          keywords={[`blog`, `unreal engine`]}
+          keywords={[`blog`, `solutions architect`, `technical deep dive`]}
         />
         <h4
             style={{

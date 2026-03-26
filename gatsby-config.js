@@ -1,8 +1,8 @@
 module.exports = {
   siteMetadata: {
     author: "Petr Leontev",
-    description: "Petr Leontev's technical blog",
-    title: "Petr Leontev - 3D Solutions Architect",
+    description: "Solutions Architect specializing in Generative AI, Multimodal Models, and Cloud Architecture. Delivering scalable solutions for media, entertainment, and enterprise.",
+    title: "Petr Leontev - Solutions Architect",
     siteUrl: "https://peterleontev.com",
     social: {
       twitter: "PetrLeontev",

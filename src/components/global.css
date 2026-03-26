@@ -1,3 +1,9 @@
 body {
-    background-image: url("../../content/background/whitenoise.png");
+  background-color: #fafafa;
+  color: #1a1a1a;
+}
+
+::selection {
+  background-color: #d35400;
+  color: #fff;
 }
