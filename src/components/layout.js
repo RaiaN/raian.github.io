@@ -17,7 +17,7 @@ const Layout = ({ children, wide }) => {
     <React.Fragment>
       <div className={`layout-container ${wide ? 'layout-wide' : ''}`}>
         <Helmet>
-          <title>Petr Leontev — Solutions Architect</title>
+          <title>Petr Leontev - Solutions Architect</title>
           <link rel="icon" type="image/png" href={favicon} />
         </Helmet>
         <header className="layout-header">

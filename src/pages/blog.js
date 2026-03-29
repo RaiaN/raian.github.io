@@ -9,7 +9,7 @@ const BlogPage = ({ data }) => {
     <Layout>
       <h2 style={{ marginBottom: rhythm(0.5) }}>Blog</h2>
       <p style={{ color: '#666', marginBottom: rhythm(2) }}>
-        Deep technical writing on systems I've built — from low-level engine internals to cloud-scale pipelines.
+        Deep technical writing on systems I've built - from low-level engine internals to cloud-scale pipelines.
       </p>
       {data.allMdx.nodes.map((node) => (
         <article key={node.frontmatter.slug} style={{ marginBottom: rhythm(2) }}>

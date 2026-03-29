@@ -284,7 +284,7 @@ const IndexPage = () => {
 
 export const Head = () => (
   <Seo
-    title="Petr Leontev — Solutions Architect"
+    title="Petr Leontev - Solutions Architect"
     keywords={[
       `solutions architect`,
       `generative ai`,

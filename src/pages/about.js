@@ -8,7 +8,7 @@ const AboutPage = () => {
       <section className="about-intro">
         <h2>About</h2>
         <p className="lead">
-          I'm Petr Leontev — a Solutions Architect with 10+ years of experience
+          I'm Petr Leontev - Solutions Architect with 10+ years of experience
           turning complex, ambiguous technical challenges into production-grade systems.
         </p>
       </section>
@@ -30,7 +30,7 @@ const AboutPage = () => {
 
         <h3 className="section-title">How I Got Here</h3>
         <p>
-          My career started deep in real-time 3D — I spent nearly five years running an
+          My career started deep in real-time 3D - I spent nearly five years running an
           immersive technology consultancy, delivering bespoke solutions with Unreal Engine
           for clients across the US, EU, UK, China, and Japan. I built everything from
           investor demos and production workflows to low-level engine plugins (Vulkan Video,
@@ -64,7 +64,7 @@ const AboutPage = () => {
             <a href="https://calendly.com/petr-leontev/30min" target="_blank" rel="noopener noreferrer">
               Calendly
             </a>
-            <span className="contact-note"> — book a 30-minute chat</span>
+            <span className="contact-note"> - book a 30-minute chat</span>
           </li>
           <li>
             <a href="https://www.linkedin.com/in/petr-leontev" target="_blank" rel="noopener noreferrer">

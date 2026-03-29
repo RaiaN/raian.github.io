@@ -8,7 +8,7 @@ const sections = [
     id: "genai",
     title: "Generative AI & Multimodal Models",
     description:
-      "I architect end-to-end pipelines for foundational generative models — text-to-video, image-to-video, and large-scale synthetic data generation. My work spans model evaluation, data pipeline design, and bridging research prototypes with production-grade infrastructure.",
+      "I architect end-to-end pipelines for foundational generative models - text-to-video, image-to-video, and large-scale synthetic data generation. My work spans model evaluation, data pipeline design, and bridging research prototypes with production-grade infrastructure.",
     highlights: [
       "Architected synthetic data generation pipelines capable of producing 100M+ assets",
       "Reduced reliance on third-party data and lowered acquisition costs by up to 40%",
@@ -60,7 +60,7 @@ const ExpertisePage = () => {
       <section className="expertise-intro">
         <h2 className="page-title">Expertise</h2>
         <p className="intro-text">
-          I operate at the intersection of AI research and production engineering — turning
+          I operate at the intersection of AI research and production engineering - turning
           ambiguous requirements into scalable, cost-effective systems. Here's where I add the most value.
         </p>
       </section>
@@ -146,7 +146,7 @@ const ExpertisePage = () => {
         }
 
         .highlight-item::before {
-          content: "—";
+          content: "-";
           position: absolute;
           left: 0;
           color: #d35400;
