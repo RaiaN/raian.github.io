@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPO Growth Stocks Scanner</title>
+<meta name="description" content="Curated screen of high-growth IPOs from May 2024 to May 2026 across US, APAC, and EMEA ex-Europe.">
+<style>
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --accent: #0ea5e9;
+  --accent-dark: #0369a1;
+  --green: #16a34a;
+  --green-bg: #dcfce7;
+  --blue: #2563eb;
+  --blue-bg: #dbeafe;
+  --amber: #d97706;
+  --amber-bg: #fef3c7;
+  --red: #dc2626;
+  --red-bg: #fee2e2;
+  --purple: #7c3aed;
+  --purple-bg: #ede9fe;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.55;
+}
+header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: white;
+  padding: 24px 32px;
+}
+header h1 { margin: 0 0 6px 0; font-size: 26px; font-weight: 600; }
+header p { margin: 0; opacity: 0.85; font-size: 13px; }
+header .meta { display: flex; gap: 24px; margin-top: 12px; font-size: 12px; opacity: 0.8; }
+header .meta span { display: flex; align-items: center; gap: 6px; }
+header .meta .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+nav.tabs {
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  display: flex;
+  gap: 4px;
+  position: sticky; top: 0; z-index: 10;
+}
+nav.tabs button {
+  background: none;
+  border: none;
+  padding: 14px 18px;
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--muted);
+  border-bottom: 3px solid transparent;
+  font-family: inherit;
+}
+nav.tabs button:hover { color: var(--text); }
+nav.tabs button.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+nav.tabs .actions { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 8px 0; }
+nav.tabs .actions button {
+  padding: 6px 12px;
+  font-size: 13px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  color: var(--text);
+}
+nav.tabs .actions button:hover { background: var(--bg); }
+
+main { padding: 24px 32px; max-width: 1600px; margin: 0 auto; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Framework section */
+.framework { max-width: 920px; }
+.framework h2 { font-size: 22px; margin: 0 0 6px; }
+.framework .lede { color: var(--muted); margin: 0 0 24px; }
+.framework .card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.framework .card h3 { margin: 0 0 12px; font-size: 16px; font-weight: 600; }
+.framework .card.danger { border-left: 4px solid var(--red); }
+.framework .card.danger h3 { color: var(--red); }
+.framework .card.info { border-left: 4px solid var(--blue); }
+.framework table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.framework table th, .framework table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+.framework table th { font-weight: 600; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+.framework ul { margin: 0; padding-left: 20px; }
+.framework ul li { margin: 6px 0; }
+.framework ol { margin: 0; padding-left: 20px; }
+.framework ol li { margin: 6px 0; }
+
+/* Table section */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: white;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  margin-bottom: 14px;
+  align-items: center;
+}
+.controls input, .controls select {
+  padding: 7px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  background: white;
+}
+.controls input { flex: 1; min-width: 200px; }
+.controls .stats { margin-left: auto; font-size: 12px; color: var(--muted); }
+
+.table-wrap {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: auto;
+  max-height: calc(100vh - 280px);
+  position: relative;
+}
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+table.data thead th {
+  background: #f1f5f9;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  text-align: left;
+  padding: 10px 10px;
+  font-weight: 600;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid var(--border);
+}
+table.data thead th:hover { background: #e2e8f0; }
+table.data thead th.sort-asc::after { content: " ▲"; color: var(--accent); }
+table.data thead th.sort-desc::after { content: " ▼"; color: var(--accent); }
+table.data tbody td { padding: 9px 10px; border-bottom: 1px solid var(--border); }
+table.data tbody tr { cursor: pointer; }
+table.data tbody tr:hover { background: #f8fafc; }
+table.data tbody tr.expanded { background: #eff6ff; }
+
+.score { display: inline-block; padding: 2px 10px; border-radius: 4px; font-weight: 600; font-size: 12px; }
+.score-A { background: var(--green-bg); color: #14532d; }
+.score-B { background: var(--blue-bg); color: #1e3a8a; }
+.score-C { background: var(--amber-bg); color: #78350f; }
+
+.badge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.badge-live { background: #dcfce7; color: #14532d; }
+.badge-live::before { content: "● "; color: var(--green); animation: pulse 2s infinite; }
+.badge-cached { background: #fef3c7; color: #78350f; }
+.badge-static { background: #f1f5f9; color: var(--muted); }
+.badge-error { background: var(--red-bg); color: #7f1d1d; }
+
+.delta-up { color: var(--green); font-weight: 600; }
+.delta-down { color: var(--red); font-weight: 600; }
+
+.detail-row td {
+  background: #f8fafc !important;
+  padding: 16px 20px !important;
+  border-bottom: 2px solid var(--border) !important;
+}
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px 20px;
+  font-size: 13px;
+  white-space: normal;
+}
+.detail-grid .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 2px; }
+.detail-grid .value { font-weight: 500; }
+.detail-grid .full { grid-column: 1 / -1; }
+.detail-grid .full .value { font-weight: 400; line-height: 1.55; }
+
+/* Settings modal */
+.modal {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal.open { display: flex; }
+.modal-box {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 480px;
+  width: 100%;
+}
+.modal-box h3 { margin: 0 0 12px; font-size: 18px; }
+.modal-box p { color: var(--muted); font-size: 13px; margin: 0 0 16px; }
+.modal-box label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.modal-box input { width: 100%; padding: 9px 12px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 13px; font-family: inherit; }
+.modal-box .row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+.modal-box .row button { padding: 8px 14px; border-radius: 6px; border: 1px solid var(--border-strong); background: white; cursor: pointer; font-size: 13px; }
+.modal-box .row button.primary { background: var(--accent); color: white; border-color: var(--accent); }
+
+footer { padding: 24px 32px; color: var(--muted); font-size: 12px; text-align: center; border-top: 1px solid var(--border); margin-top: 40px; }
+footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>IPO Growth Stocks Scanner</h1>
+  <p>Curated growth-stock screen of US, APAC, and EMEA (ex-Europe) IPOs from May 2024 – May 2026</p>
+  <div class="meta">
+    <span><span class="dot"></span><span id="live-status">Initializing live prices…</span></span>
+    <span id="last-update"></span>
+    <span>50 companies tracked</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button data-tab="framework" class="active">Framework</button>
+  <button data-tab="screener">Screener</button>
+  <button data-tab="about">About &amp; Deploy</button>
+  <div class="actions">
+    <button id="refresh-btn" title="Re-fetch live prices">↻ Refresh</button>
+    <button id="settings-btn" title="API key for India/Korea/Dubai coverage">⚙ Settings</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ========== FRAMEWORK TAB ========== -->
+<section id="tab-framework" class="tab-content active framework">
+  <h2>Growth-stock screening framework</h2>
+  <p class="lede">Apply this rubric to any IPO from the last 24 months. Scores are weighted; a name needs to clear all hard disqualifiers before scoring.</p>
+
+  <div class="card">
+    <h3>A. Quantitative criteria — 60% of score</h3>
+    <table>
+      <thead><tr><th>Pillar</th><th>Metric</th><th>Excellent (5)</th><th>Good (3)</th><th>Weak (1)</th><th>Weight</th></tr></thead>
+      <tbody>
+        <tr><td>Growth</td><td>Revenue YoY</td><td>&gt;50%</td><td>25–50%</td><td>&lt;25%</td><td>15%</td></tr>
+        <tr><td>Growth</td><td>Revenue QoQ (annualised)</td><td>&gt;40%</td><td>15–40%</td><td>&lt;15%</td><td>5%</td></tr>
+        <tr><td>Quality</td><td>Gross margin (SaaS)</td><td>&gt;75%</td><td>65–75%</td><td>&lt;65%</td><td>10%</td></tr>
+        <tr><td>Quality</td><td>Gross margin (hardware/industrial)</td><td>&gt;40%</td><td>25–40%</td><td>&lt;25%</td><td>(substitute)</td></tr>
+        <tr><td>Efficiency</td><td>Rule of 40</td><td>&gt;60</td><td>40–60</td><td>&lt;40</td><td>10%</td></tr>
+        <tr><td>Efficiency</td><td>Net dollar retention</td><td>&gt;120%</td><td>110–120%</td><td>&lt;110%</td><td>5%</td></tr>
+        <tr><td>Cash</td><td>FCF margin trajectory</td><td>positive &amp; expanding</td><td>improving</td><td>deteriorating</td><td>5%</td></tr>
+        <tr><td>Scale</td><td>Market cap</td><td>$1B–$30B</td><td>$500M–$1B / $30B–$75B</td><td>&lt;$500M / &gt;$75B</td><td>5%</td></tr>
+        <tr><td>Float</td><td>Free float</td><td>&gt;25%</td><td>10–25%</td><td>&lt;10%</td><td>3%</td></tr>
+        <tr><td>Trading</td><td>Price vs. offer</td><td>+20% to +150%</td><td>flat to +20%</td><td>&lt;-10% or &gt;+200%</td><td>2%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>B. Qualitative criteria — 25% of score</h3>
+    <ul>
+      <li><strong>TAM &amp; runway (8%)</strong> — addressable market &gt;$10B with credible expansion vectors.</li>
+      <li><strong>Moat (7%)</strong> — network effects, switching costs, data, regulatory licensing, vertical integration.</li>
+      <li><strong>Founder/management (5%)</strong> — founder still operating, prior scaling experience, insider ownership &gt;5%.</li>
+      <li><strong>Customer concentration (3%)</strong> — top customer &lt;20% ideal; 20–40% acceptable with named anchors; &gt;50% triggers a one-tier downgrade.</li>
+      <li><strong>GTM motion strength (2%)</strong> — repeatable, measurable, multi-channel.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>C. IPO-specific considerations — 15% of score</h3>
+    <ul>
+      <li><strong>Lockup expiry (5%)</strong> — within 90 days = downgrade; 90–180 days = neutral; &gt;180 days = upgrade.</li>
+      <li><strong>Secondary offering risk (3%)</strong> — pre-IPO investor stake &gt;50% with planned sell-down = downgrade.</li>
+      <li><strong>Insider selling (3%)</strong> — material 10b5-1 sells by founders/CFO post-lockup = flag.</li>
+      <li><strong>S-1 red flags (4%)</strong> — going-concern language, related-party transactions, dual-class super-voting, qualified auditor opinions, FX/CFIUS exposure.</li>
+    </ul>
+  </div>
+
+  <div class="card danger">
+    <h3>D. Hard disqualifiers (any one = exclude)</h3>
+    <ol>
+      <li>Pre-revenue or &lt;$50M TTM revenue (excluding select biotech with Phase 3 data).</li>
+      <li>Gross margin &lt;20% with no path to expansion in 8 quarters.</li>
+      <li>Auditor going-concern doubt.</li>
+      <li>&gt;70% revenue from a single customer for &gt;2 years.</li>
+      <li>Active SEC/regulatory enforcement action of material magnitude.</li>
+      <li>Management has missed &gt;50% of own guidance in first 2 quarters.</li>
+      <li>Lockup on &gt;75% of float expiring within 30 days.</li>
+    </ol>
+  </div>
+
+  <div class="card info">
+    <h3>E. Composite scoring</h3>
+    <p>Sum weighted pillar scores; multiply by qualitative multiplier (0.85 to 1.15). Final scale: <strong>A &gt;4.2, B 3.5–4.2, C 2.8–3.5, D &lt;2.8</strong> (sell/avoid).</p>
+  </div>
+</section>
+
+<!-- ========== SCREENER TAB ========== -->
+<section id="tab-screener" class="tab-content">
+  <div class="controls">
+    <input type="text" id="search" placeholder="Search company or ticker…">
+    <select id="filter-sector"><option value="">All sectors</option></select>
+    <select id="filter-exchange"><option value="">All exchanges</option></select>
+    <select id="filter-gtm"><option value="">All GTM motions</option></select>
+    <select id="filter-score"><option value="">All scores</option><option>A</option><option>B</option><option>C</option></select>
+    <span class="stats" id="row-count"></span>
+  </div>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr id="thead-row"></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ========== ABOUT TAB ========== -->
+<section id="tab-about" class="tab-content framework">
+  <h2>About &amp; deployment</h2>
+  <div class="card">
+    <h3>What this is</h3>
+    <p>A static, single-file IPO screener covering 50 high-growth companies that listed on US (NYSE/Nasdaq), Asia-Pacific (HKEX, TSE, NSE/BSE, KRX), and EMEA-ex-Europe (DFM) exchanges between May 2024 and May 2026. The framework, scoring rubric, and curated dataset are baked into the page so it works offline. Where supported, last-prices are refreshed live from Stooq on page load.</p>
+  </div>
+
+  <div class="card">
+    <h3>Live data sources &amp; coverage</h3>
+    <ul>
+      <li><strong>Stooq</strong> (no key, CORS-enabled) — covers US, Hong Kong, Tokyo. ~15-minute delay.</li>
+      <li><strong>Twelve Data</strong> (free tier 800/day, requires key) — extends to NSE India, KRX Korea, and DFM Dubai. Add your free key in Settings.</li>
+      <li>For tickers no source supports, the table falls back to the <em>as-of</em> price baked in (showing a <span class="badge badge-static">cached</span> badge).</li>
+    </ul>
+    <p>Click any row to expand full company details, GTM motion, and risks. Sort any column by clicking the header. Filter by sector, exchange, GTM motion, or score.</p>
+  </div>
+
+  <div class="card">
+    <h3>Deploy to GitHub Pages in 4 steps</h3>
+    <ol>
+      <li>Create a new public repo on GitHub (e.g. <code>ipo-scanner</code>).</li>
+      <li>Add this <code>index.html</code> file to the root and commit.</li>
+      <li>Go to <strong>Settings → Pages</strong>, set <strong>Source</strong> to <em>Deploy from a branch</em>, branch <em>main</em>, folder <em>/ (root)</em>, and Save.</li>
+      <li>Within ~1 minute, your site will be live at <code>https://&lt;your-username&gt;.github.io/ipo-scanner/</code>.</li>
+    </ol>
+    <p>For a custom domain, add a <code>CNAME</code> file with your domain and configure DNS. The site is single-file, so updates are just one commit.</p>
+  </div>
+
+  <div class="card">
+    <h3>Optional: get a free Twelve Data key for India/Korea/Dubai coverage</h3>
+    <ol>
+      <li>Sign up at <a href="https://twelvedata.com" target="_blank">twelvedata.com</a> (free, no card).</li>
+      <li>Copy your API key from the dashboard.</li>
+      <li>Click <strong>⚙ Settings</strong> in the top-right, paste, and Save.</li>
+      <li>The key is stored in your browser's localStorage on your own deployed domain — never sent anywhere except directly to Twelve Data.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Caveats</h3>
+    <ul>
+      <li>Live prices are 15–60 minutes delayed depending on exchange. Use real-time platforms for execution decisions.</li>
+      <li>Baked metrics reflect Q1 2026 earnings season + S-1/RHP filings as of May 5, 2026. Verify against primary sources before any decision.</li>
+      <li>Indian FY runs April–March; some figures shown are FY2025 or FY2026 partial.</li>
+      <li>Not investment advice. Educational tool only.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<div class="modal" id="settings-modal">
+  <div class="modal-box">
+    <h3>Settings</h3>
+    <p>Add a Twelve Data API key to enable live prices for Indian (NSE), Korean (KRX), and Dubai (DFM) tickers. Free tier gives 800 calls/day.</p>
+    <label for="api-key">Twelve Data API key</label>
+    <input type="text" id="api-key" placeholder="paste key here">
+    <div class="row">
+      <button id="settings-cancel">Cancel</button>
+      <button id="settings-save" class="primary">Save</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  IPO Growth Stocks Scanner · Built as a static page for self-hosting · Live prices via Stooq &amp; Twelve Data ·
+  <a href="https://github.com" target="_blank">Fork on GitHub</a>
+</footer>
+
+<script>
+// =================================================================
+// DATA: 50 IPOs (May 2024 – May 2026) with curated metrics + GTM
+// stooqTicker = symbol for Stooq (works no-key); td = Twelve Data symbol (needs key)
+// price = baked "as-of" price ~ early May 2026; live fetch will overwrite if successful
+// =================================================================
+const DATA = [
+  {n:1,co:"CoreWeave",t:"CRWV",ex:"Nasdaq",ipo:"2025-03-28",offer:40,price:130,mc:"$60B",sector:"AI Cloud Infra",rev:"$5.13B",yoy:"+339%",gm:"74%",profit:"Adj EBITDA+",ndr:"n/a",rule:"~100",gtm:"Direct Enterprise",gtmDetail:"Direct enterprise sales to AI labs (OpenAI, Anthropic) plus hyperscalers (MSFT 67% of revenue, Meta $14.2B contract). Large-deal motion with $1M+ customers up 150% YoY. Co-sell with NVIDIA reference architectures.",desc:"GPU-as-a-service hyperscaler for AI training and inference workloads.",risk:"Customer concentration: MSFT 67%. $21B debt load. Data-center delivery delays. Lockup overhang from venture investors.",score:"A",stooqTicker:"crwv.us",td:"CRWV"},
+  {n:2,co:"Astera Labs",t:"ALAB",ex:"Nasdaq",ipo:"2024-03-20",offer:36,price:155,mc:"$26B",sector:"Semiconductors",rev:"$852M",yoy:"+115%",gm:"76%",profit:"GAAP+",ndr:"n/a",rule:"~140",gtm:"Direct Enterprise",gtmDetail:"Direct design-win sales to hyperscalers (AWS, MSFT, Meta, Google) and AI infrastructure OEMs. Embedded in NVIDIA NVLink Fusion reference designs. Long sales cycles tied to platform transitions (PCIe 5/6, CXL).",desc:"Connectivity semis (PCIe retimers, Ethernet, switch fabric) for AI rack architectures.",risk:"NVIDIA roadmap dependency. Cyclical semiconductor exposure. Limited customer diversification beyond top 4 hyperscalers.",score:"A",stooqTicker:"alab.us",td:"ALAB"},
+  {n:3,co:"Reddit",t:"RDDT",ex:"NYSE",ipo:"2024-03-21",offer:34,price:165,mc:"$30B",sector:"Social/Ads",rev:"$2.4B",yoy:"+69%",gm:"90%",profit:"GAAP+",ndr:"n/a",rule:"~109",gtm:"PLG",gtmDetail:"PLG bottom-up community growth funnel into self-serve ad platform. Direct enterprise/agency sales for top accounts (auto, CPG, finance). Google data licensing deal monetises moderator-curated content for AI training.",desc:"Community-driven social platform monetised via ads and AI data licensing.",risk:"AI search disintermediation. Ad cyclicality. Moderator backlash risk from monetisation.",score:"A",stooqTicker:"rddt.us",td:"RDDT"},
+  {n:4,co:"Figma",t:"FIG",ex:"NYSE",ipo:"2025-07-31",offer:33,price:50,mc:"$25B",sector:"Design SaaS",rev:"$1.06B",yoy:"+40%",gm:"88%",profit:"Non-GAAP+",ndr:"136%",rule:"~54",gtm:"PLG",gtmDetail:"PLG bottom-up: free → team → org tier upsell. Enterprise top-down expansion via Dev Mode, FedRAMP/SSO, AI suite. Partner-led with hyperscalers and design system consultancies.",desc:"Collaborative product design and developer handoff platform.",risk:"AI-native competitors (Cursor, Lovable). Adobe pricing pressure. Design tool category maturation.",score:"A",stooqTicker:"fig.us",td:"FIG"},
+  {n:5,co:"Hinge Health",t:"HNGE",ex:"NYSE",ipo:"2025-05-22",offer:32,price:39,mc:"$3.5B",sector:"Digital Health",rev:"$588M",yoy:"+51%",gm:"83%",profit:"GAAP+",ndr:"n/a",rule:"~81",gtm:"Direct Enterprise",gtmDetail:"Direct B2B2C: enterprise sales force selling to self-insured employers (1,800+ enterprise customers) and health plans. Channel co-sell with PBMs and benefits brokers. State employee plan wins (24 states) drive public-sector expansion.",desc:"Digital MSK pain therapy via wearable sensors and AI-driven care plans.",risk:"Limited NDR transparency. Hyperscaler entry into digital health. Employer benefit budget pressure.",score:"A",stooqTicker:"hnge.us",td:"HNGE"},
+  {n:6,co:"Tempus AI",t:"TEM",ex:"Nasdaq",ipo:"2024-06-14",offer:37,price:95,mc:"$16B",sector:"HealthTech/AI",rev:"$1.27B",yoy:"+83%",gm:"63%",profit:"Loss",ndr:"n/a",rule:"~20",gtm:"Direct Enterprise",gtmDetail:"Direct hospital and oncology sales for genomic testing. Pharma data-licensing partnerships (AstraZeneca, GSK) monetise multi-modal clinical data. Acquired Ambry Genetics and Deep 6 AI for trial recruitment scale.",desc:"AI-driven precision medicine: genomics + clinical data + decision-support apps.",risk:"Lab reimbursement cuts. SBC dilution. Long path to GAAP profitability.",score:"A",stooqTicker:"tem.us",td:"TEM"},
+  {n:7,co:"Rubrik",t:"RBRK",ex:"NYSE",ipo:"2024-04-25",offer:32,price:108,mc:"$22B",sector:"Cybersecurity",rev:"$1.32B",yoy:"+46%",gm:"78%",profit:"Adj+",ndr:"~115%",rule:"~47",gtm:"Channel/Partner",gtmDetail:"Direct enterprise sales with Microsoft co-sell partnership (Azure-led). Channel-led via VARs (CDW, SHI). Land via backup/cyber-recovery, expand into DSPM and AI security agents.",desc:"Cyber-resilience and data security posture management platform.",risk:"Cohesity and Veeam competition. SBC. Microsoft as both partner and potential competitor.",score:"A",stooqTicker:"rbrk.us",td:"RBRK"},
+  {n:8,co:"Karman Holdings",t:"KRMN",ex:"NYSE",ipo:"2025-02-13",offer:22,price:78,mc:"$10B",sector:"Aerospace/Defense",rev:"$472M",yoy:"+37%",gm:"40%",profit:"Adj EBITDA 30.8%",ndr:"n/a",rule:"~68",gtm:"Direct Enterprise",gtmDetail:"Direct sales to defense primes (Lockheed, RTX, Northrop, Boeing). Sole or single-source position on 130+ programmes. Active M&A roll-up (5 deals 2025) consolidating critical components for hypersonics, missile defense, space launch.",desc:"Critical components and integrated assemblies for missile defense, hypersonics, and space launch.",risk:"Federal budget cyclicality. Government shutdown drag. Programme cancellation risk.",score:"A",stooqTicker:"krmn.us",td:"KRMN"},
+  {n:9,co:"SailPoint",t:"SAIL",ex:"Nasdaq",ipo:"2025-02-13",offer:23,price:32,mc:"$18B",sector:"Identity Security",rev:"$925M ARR",yoy:"+30%",gm:"72%",profit:"Adj+",ndr:"114%",rule:"~50",gtm:"Direct Enterprise",gtmDetail:"Top-down direct enterprise sales to F500 CISOs. Atlas platform: land with identity governance, expand to non-human identity and AI agents. Deep partner channel (Deloitte, KPMG, Accenture). Federal/regulated vertical traction.",desc:"Identity governance and administration platform for enterprise.",risk:"Microsoft Entra encroachment. Thoma Bravo overhang post-relisting.",score:"A",stooqTicker:"sail.us",td:"SAIL"},
+  {n:10,co:"Tokyo Metro",t:"9023",ex:"TSE",ipo:"2024-10-23",offer:1200,price:1650,mc:"$8B",sector:"Transit Utility",rev:"¥390B",yoy:"+6%",gm:"-",profit:"GAAP+",ndr:"n/a",rule:"n/a",gtm:"B2G",gtmDetail:"Government utility model. Fare revenue + retail concession in 180+ stations + advertising revenue + international consulting JVs (Vietnam, Thailand metros).",desc:"Operator of the Tokyo Metro subway network.",risk:"Population decline in Japan. Capex-intensive infrastructure renewal. Regulated tariffs.",score:"B",stooqTicker:"9023.jp",td:"9023.T"},
+  {n:11,co:"JX Advanced Metals",t:"5016",ex:"TSE",ipo:"2025-03-19",offer:820,price:1450,mc:"$28B",sector:"Semis Materials",rev:"¥1.4T",yoy:"+10%",gm:"-",profit:"GAAP+",ndr:"n/a",rule:"n/a",gtm:"Direct Enterprise",gtmDetail:"Direct B2B account-based sales to semiconductor fabs (TSMC, Intel, Samsung). Long-term supply agreements for sputtering targets, copper foils, high-purity metals.",desc:"World leader in sputtering targets, copper foils, and high-purity metals for semiconductors.",risk:"Customer concentration in fabs. CapEx-heavy. Commodity input price volatility.",score:"B",stooqTicker:"5016.jp",td:"5016.T"},
+  {n:12,co:"Hexaware Technologies",t:"HEXT",ex:"NSE",ipo:"2025-02-19",offer:708,price:450,mc:"$3.3B",sector:"IT Services",rev:"₹13,430 Cr",yoy:"+8%",gm:"30%",profit:"Adj EBITDA 15.8%",ndr:"n/a",rule:"~24",gtm:"Direct Enterprise",gtmDetail:"Direct enterprise sales with 6 vertical pods (BFSI, healthcare, mfg, hi-tech, retail, life sciences). Land-Ramp-Expand methodology. Hyperscaler partnerships for cloud migrations. Carlyle-backed re-IPO.",desc:"Mid-cap global IT and digital services firm.",risk:"Margin compression. AI substitution of headcount-billed work. Slowing BFSI spend.",score:"B",stooqTicker:null,td:"HEXT.NSE"},
+  {n:13,co:"Mixue Group",t:"2097",ex:"HKEX",ipo:"2025-03-03",offer:202.5,price:540,mc:"HK$200B",sector:"Consumer F&B",rev:"RMB 25B",yoy:"+25%",gm:"32%",profit:"Highly profitable",ndr:"n/a",rule:"n/a",gtm:"Franchise",gtmDetail:"Franchise model with 45,000+ stores. 97% of revenue from selling ingredients/packaging/equipment to franchisees, not royalties. Vertically integrated supply chain with own R&D and manufacturing.",desc:"China's largest bubble-tea and ice-cream chain (45,000+ stores).",risk:"China consumer slowdown. Store saturation in top-tier cities. Lockup overhang.",score:"A",stooqTicker:"2097.hk",td:"2097.HKEX"},
+  {n:14,co:"CATL (HK listing)",t:"3750",ex:"HKEX",ipo:"2025-05-20",offer:263,price:330,mc:"HK$1.5T",sector:"EV Batteries",rev:"RMB 360B+",yoy:"+15%",gm:"24%",profit:"Profitable",ndr:"n/a",rule:"n/a",gtm:"OEM",gtmDetail:"Direct OEM contracts with Tesla, BMW, VW, Stellantis, Mercedes. JV manufacturing model (Spain plant w/ Stellantis). 13 global plants. A+H dual-listing for international capital access.",desc:"World's largest EV battery maker; A+H dual listing.",risk:"US sanctions risk. EV demand cycle. CapEx intensity.",score:"A",stooqTicker:"3750.hk",td:"3750.HKEX"},
+  {n:15,co:"Hesai Technology",t:"HSAI",ex:"Nasdaq",ipo:"2023-02-09",offer:19,price:42,mc:"$5B",sector:"Auto LiDAR",rev:"$310M",yoy:"+60%",gm:"38%",profit:"Approaching+",ndr:"n/a",rule:"n/a",gtm:"OEM",gtmDetail:"Direct OEM design wins (Li Auto, Zeekr, Geely, Chery). Robotaxi platform sales (Pony AI, WeRide, Motional). HK secondary listing Sep 2025 for Asian capital and CFIUS optionality.",desc:"Leading lidar sensor maker for ADAS and robotaxis (9 of top-10 robotaxi suppliers).",risk:"Auto cycle. Price competition from Robosense. US-China tech decoupling.",score:"A",stooqTicker:"hsai.us",td:"HSAI"},
+  {n:16,co:"Pony AI",t:"PONY",ex:"Nasdaq",ipo:"2024-11-27",offer:13,price:22,mc:"$8B",sector:"Autonomous Driving",rev:"$76M",yoy:"+72%",gm:"-",profit:"Loss",ndr:"n/a",rule:"n/a",gtm:"OEM",gtmDetail:"Direct OEM partnerships with Toyota, GAC, BAIC for L4 platform. B2C robotaxi operations in Tier-1 Chinese cities. Robotruck fleet sales for autonomous logistics. ADC product sales to robot-delivery companies.",desc:"L4 autonomous driving platform: robotaxi + robotruck.",risk:"Regulatory uncertainty. Cash burn. Tesla FSD and Waymo competition.",score:"C",stooqTicker:"pony.us",td:"PONY"},
+  {n:17,co:"Horizon Robotics",t:"9660",ex:"HKEX",ipo:"2024-10-24",offer:3.99,price:8,mc:"$11B",sector:"ADAS Chips",rev:"RMB 2B+",yoy:"+152%",gm:"79%",profit:"Loss",ndr:"n/a",rule:"~73",gtm:"OEM",gtmDetail:"Direct OEM design wins with 27 OEMs including all top-10 Chinese automakers. VW CARIAD JV for global ADAS platform. SuperDrive end-to-end autonomous system as upsell.",desc:"China's leading ADAS/AD chip + algorithm platform.",risk:"Geopolitical/chip ban. Customer concentration in China auto market.",score:"B",stooqTicker:"9660.hk",td:"9660.HKEX"},
+  {n:18,co:"Mao Geping Cosmetics",t:"1318",ex:"HKEX",ipo:"2024-12-10",offer:29.80,price:87,mc:"$5.4B",sector:"Premium Beauty",rev:"RMB 4B+",yoy:"+41%",gm:"85%",profit:"Net 25%",ndr:"n/a",rule:"~66",gtm:"D2C",gtmDetail:"Department-store counter network for premium positioning + Tmall and Douyin DTC for scale + makeup-artist heritage as celebrity moat.",desc:"Premium Chinese cosmetics brand built on founder's makeup-artist heritage.",risk:"China consumer slowdown. Lockup overhang. Single-founder key-person risk.",score:"A",stooqTicker:"1318.hk",td:"1318.HKEX"},
+  {n:19,co:"Chery Automobile",t:"9973",ex:"HKEX",ipo:"2025-09-25",offer:30.75,price:38,mc:"$25B",sector:"Auto OEM",rev:"RMB 270B",yoy:"+90%",gm:"14%",profit:"PAT 14.3B",ndr:"n/a",rule:"n/a",gtm:"OEM",gtmDetail:"Captive dealer network in China + 100+ export markets (#1 Chinese PV exporter). Local JV manufacturing (Spain Omoda plant). B2C retail + B2B fleet sales.",desc:"China's #2 passenger-vehicle maker and #1 PV exporter.",risk:"EV margin compression. EU/US tariffs on Chinese autos.",score:"B",stooqTicker:"9973.hk",td:"9973.HKEX"},
+  {n:20,co:"Lenskart Solutions",t:"LENSKART",ex:"NSE",ipo:"2025-11-10",offer:402,price:420,mc:"$8B",sector:"D2C Eyewear",rev:"₹6,652 Cr",yoy:"+23%",gm:"-",profit:"EBITDA 14.6%",ndr:"n/a",rule:"~38",gtm:"D2C",gtmDetail:"Owned + franchised stores (2,723) + app + international expansion (Japan, Singapore, UAE). Vertically integrated manufacturing for prescription lenses. Subscription Gold programme drives repeat.",desc:"India's largest eyewear retailer (omnichannel).",risk:"Stretched valuation (~285x P/E). Lockup unlock. International unit economics.",score:"C",stooqTicker:null,td:"LENSKART.NSE"},
+  {n:21,co:"Meesho",t:"MEESHO",ex:"NSE",ipo:"2025-12-10",offer:111,price:220,mc:"$8B",sector:"E-commerce",rev:"₹9,390 Cr",yoy:"+26%",gm:"low",profit:"Loss",ndr:"n/a",rule:"~24",gtm:"Marketplace",gtmDetail:"D2C marketplace with zero-commission seller model targeting Tier-2/3 India. Revenue from ads/logistics/financial services. Captive Valmo logistics arm reduces 3PL dependence.",desc:"India's largest e-commerce platform by orders, focused on Tier 2/3.",risk:"Profitability path. Tax notice overhang. Amazon/Flipkart competition.",score:"B",stooqTicker:null,td:"MEESHO.NSE"},
+  {n:22,co:"Groww",t:"GROWW",ex:"NSE",ipo:"2025-11-12",offer:100,price:150,mc:"$16B",sector:"Fintech/Broker",rev:"₹3,902 Cr",yoy:"+50%",gm:"high",profit:"PAT +327%",ndr:"n/a",rule:"~85",gtm:"D2C",gtmDetail:"Pure D2C digital acquisition: 83% organic. Cross-sell ladder: broking → mutual funds → AMC → credit. Education content as funnel-top.",desc:"India's #1 retail broker by NSE active clients.",risk:"SEBI regulatory tightening. Zerodha and Upstox competition. Equity market cycles.",score:"A",stooqTicker:null,td:"GROWW.NSE"},
+  {n:23,co:"PhysicsWallah",t:"PHYSICSWALLAH",ex:"NSE",ipo:"2025-11-18",offer:109,price:95,mc:"$5B",sector:"Edtech",rev:"₹2,887 Cr",yoy:"+51%",gm:"-",profit:"Loss",ndr:"n/a",rule:"~31",gtm:"D2C",gtmDetail:"YouTube-led brand → app subscription → 198 offline centres in Tier-2/3 cities. Acquisitions (Xylem, Utkarsh) for vertical depth in JEE/NEET prep.",desc:"India's hybrid test-prep + upskilling platform.",risk:"Edtech category fatigue post-Byju's. Profitability gap. Founder-key-person risk.",score:"C",stooqTicker:null,td:"PHYSICSWALLAH.NSE"},
+  {n:24,co:"Pine Labs",t:"PINELAB",ex:"NSE",ipo:"2025-11-14",offer:221,price:245,mc:"$3B",sector:"Payments",rev:"₹2,274 Cr",yoy:"+28%",gm:"-",profit:"Q1 first profit",ndr:"n/a",rule:"~30",gtm:"Direct Enterprise",gtmDetail:"Direct enterprise sales to large merchants (Amazon Pay, Flipkart, LG). Bank channel partnerships (HDFC, Axis) for distribution. International ops in UAE, Singapore, Malaysia.",desc:"India POS + BNPL + prepaid/issuing platform.",risk:"PhonePe POS competition. Razorpay's offline push. Regulatory.",score:"B",stooqTicker:null,td:"PINELAB.NSE"},
+  {n:25,co:"Urban Company",t:"URBANCO",ex:"NSE",ipo:"2025-09-17",offer:103,price:95,mc:"$2B",sector:"Services Marketplace",rev:"₹1,261 Cr",yoy:"+36%",gm:"-",profit:"PAT 240 Cr",ndr:"n/a",rule:"~38",gtm:"Marketplace",gtmDetail:"Two-sided marketplace: D2C consumer app + service-pro recruitment/training. Native consumer brand integrated for in-house product margin.",desc:"India home/beauty services marketplace + Native consumer brand.",risk:"Lockup pressure. Whatsapp/local handyman competition. Margin sustainability.",score:"C",stooqTicker:null,td:"URBANCO.NSE"},
+  {n:26,co:"Ather Energy",t:"ATHERENERG",ex:"NSE",ipo:"2025-05-06",offer:321,price:946,mc:"$4B",sector:"EV 2-Wheeler",rev:"₹3,173 Cr",yoy:"+28%",gm:"-",profit:"Loss narrowing",ndr:"n/a",rule:"~10",gtm:"D2C",gtmDetail:"D2C: 265 experience + 233 service centres. Atherstack OS as software differentiator. Ather Grid charging network as ecosystem moat.",desc:"Vertically integrated Indian EV scooter maker.",risk:"Ola Electric and Bajaj Chetak competition. EV subsidy roll-off. Cash burn.",score:"B",stooqTicker:null,td:"ATHERENERG.NSE"},
+  {n:27,co:"NTPC Green Energy",t:"NTPCGREEN",ex:"NSE",ipo:"2024-11-27",offer:108,price:105,mc:"$11B",sector:"Renewables",rev:"₹2,029 Cr",yoy:"step-fn",gm:"-",profit:"Profitable",ndr:"n/a",rule:"n/a",gtm:"B2G",gtmDetail:"Long-term PPAs with SECI and state utilities. Project-based development model. PSU access to land/permits as moat.",desc:"NTPC's renewables (solar + wind) arm.",risk:"PPA tariff pressure. Capex execution. Solar module input cost volatility.",score:"B",stooqTicker:null,td:"NTPCGREEN.NSE"},
+  {n:28,co:"Hyundai Motor India",t:"HYUNDAI",ex:"NSE",ipo:"2024-10-22",offer:1960,price:2250,mc:"$22B",sector:"Auto OEM",rev:"₹71,302 Cr",yoy:"+16%",gm:"-",profit:"EBITDA 13.8%",ndr:"n/a",rule:"n/a",gtm:"OEM",gtmDetail:"Captive dealer network (1,366 sales / 1,550 service touchpoints). Export hub for Hyundai globally — manufactures right-hand-drive for 100+ markets.",desc:"India's #2 PV maker; export hub for Hyundai Motor.",risk:"EV transition lag. Maruti Suzuki and Tata competition. Royalty payments to parent.",score:"B",stooqTicker:null,td:"HYUNDAI.NSE"},
+  {n:29,co:"Swiggy",t:"SWIGGY",ex:"NSE",ipo:"2024-11-13",offer:390,price:420,mc:"$11B",sector:"Food/Q-comm",rev:"₹11,247 Cr",yoy:"+36%",gm:"improving",profit:"Loss",ndr:"n/a",rule:"~30",gtm:"Marketplace",gtmDetail:"D2C app for food delivery + B2B restaurant enablement. Dark-store hyperlocal Q-commerce (Instamart). Swiggy One subscription drives frequency. Genie for hyperlocal logistics.",desc:"India food delivery + Instamart Q-commerce platform.",risk:"Profitability gap vs. Zomato. Q-commerce land grab burning cash. Zepto pricing pressure.",score:"C",stooqTicker:null,td:"SWIGGY.NSE"},
+  {n:30,co:"Bajaj Housing Finance",t:"BAJAJHFL",ex:"NSE",ipo:"2024-09-16",offer:70,price:120,mc:"$12B",sector:"Housing Finance",rev:"₹7,618 Cr",yoy:"+35%",gm:"-",profit:"PAT +38%",ndr:"GNPA 0.28%",rule:"n/a",gtm:"Channel/Partner",gtmDetail:"Hybrid sourcing: direct (developer tie-ups, digital app) + DSA/aggregator channel. Bajaj Finance group cross-sell engine.",desc:"Housing finance arm of Bajaj Finance group.",risk:"Property cycle. Interest rate sensitivity. Asset quality.",score:"A",stooqTicker:null,td:"BAJAJHFL.NSE"},
+  {n:31,co:"Premier Energies",t:"PREMIERENE",ex:"NSE",ipo:"2024-09-03",offer:450,price:1050,mc:"$6B",sector:"Solar Mfg",rev:"₹3,171 Cr",yoy:"+117%",gm:"-",profit:"EBITDA 22%",ndr:"n/a",rule:"~139",gtm:"Direct Enterprise",gtmDetail:"B2B project sales (NTPC, Tata Power, Sembcorp). 20+ export markets. Heliene USA JV for backward integration into US market.",desc:"India's #2 integrated solar cell + module manufacturer.",risk:"Module ASP pressure. China overcapacity dumping. PLI scheme dependency.",score:"A",stooqTicker:null,td:"PREMIERENE.NSE"},
+  {n:32,co:"Waaree Energies",t:"WAAREEENER",ex:"NSE",ipo:"2024-10-28",offer:1503,price:3200,mc:"$11B",sector:"Solar Mfg",rev:"₹14,445 Cr",yoy:"+27%",gm:"-",profit:"PAT +154%",ndr:"ROE 30%",rule:"~57",gtm:"Direct Enterprise",gtmDetail:"B2B project sales for utility-scale + 369 retail franchisees for rooftop. 57% of FY24 revenue from US exports — primary US import alternative for Chinese module restrictions.",desc:"India's largest solar PV module manufacturer.",risk:"US tariff/anti-dumping risk. China overcapacity. Customer concentration in US.",score:"A",stooqTicker:null,td:"WAAREEENER.NSE"},
+  {n:33,co:"Klarna",t:"KLAR",ex:"NYSE",ipo:"2025-09-10",offer:40,price:30,mc:"$10B",sector:"BNPL/Fintech",rev:"$3.51B",yoy:"+25%",gm:"-",profit:"Adj op+",ndr:"n/a",rule:"n/a",gtm:"Channel/Partner",gtmDetail:"B2B2C: merchant integrations (Walmart, Apple Pay) for distribution + Klarna Card direct to consumer. AI-driven CS reducing headcount drives margin.",desc:"Global BNPL + flexible payments + emerging AI-driven digital bank.",risk:"Credit cycle. BNPL regulator rules in US/UK. Affirm and Afterpay competition.",score:"C",stooqTicker:"klar.us",td:"KLAR"},
+  {n:34,co:"Circle",t:"CRCL",ex:"NYSE",ipo:"2025-06-05",offer:31,price:80,mc:"$18B",sector:"Crypto/Fintech",rev:"$2.5B+",yoy:"+50%",gm:"high",profit:"Profitable",ndr:"n/a",rule:"~95",gtm:"Channel/Partner",gtmDetail:"B2B platform — Circle Payments Network onboarding for FIs and fintechs. 50+ partner FIs. Bank trust charter pending. Coinbase relationship critical (~50% revenue share).",desc:"USDC stablecoin issuer + Circle Payments Network.",risk:"Interest-rate sensitivity (yield = ~85% revenue). Coinbase concentration. Tether competition.",score:"B",stooqTicker:"crcl.us",td:"CRCL"},
+  {n:35,co:"Bullish",t:"BLSH",ex:"NYSE",ipo:"2025-08-13",offer:37,price:38,mc:"$5B",sector:"Crypto Exchange",rev:"$290M",yoy:"+72%",gm:"-",profit:"Adj EBITDA 38%",ndr:"n/a",rule:"~110",gtm:"Direct Enterprise",gtmDetail:"Direct B2B sales to institutional traders + market-makers. Spot + options trading. CoinDesk media flywheel for brand. BitLicense for US spot operations.",desc:"Institutional crypto exchange + spot + options.",risk:"Crypto cycle. Coinbase Institutional + Binance competition. SEC regulatory uncertainty.",score:"C",stooqTicker:"blsh.us",td:"BLSH"},
+  {n:36,co:"Pattern Group",t:"PTRN",ex:"Nasdaq",ipo:"2025-09-19",offer:14,price:22,mc:"$5B",sector:"E-com Services",rev:"$2.5B",yoy:"+39%",gm:"low (resale)",profit:"EBITDA $153M",ndr:"NRR 124%",rule:"~45",gtm:"Channel/Partner",gtmDetail:"B2B brand partnerships (Bosch, Tumi, LifeScan, Gaia). Buy-and-resell model with AI optimization across 60+ marketplaces. 94% Amazon-concentrated.",desc:"E-commerce accelerator across 60+ marketplaces with AI optimization.",risk:"Amazon platform risk (94% concentration). Brand losses. Chinese sellers.",score:"B",stooqTicker:"ptrn.us",td:"PTRN"},
+  {n:37,co:"Netskope",t:"NTSK",ex:"Nasdaq",ipo:"2025-09-18",offer:19,price:24,mc:"$8B",sector:"Cybersecurity",rev:"$709M",yoy:"+32%",gm:"75%",profit:"Loss",ndr:"~115%",rule:"~37",gtm:"Direct Enterprise",gtmDetail:"Top-down enterprise direct sales to F500 CISOs. 1,531 customers >$100K ARR. Partner channels (35% revenue from top-5 partners). Land via SWG/CASB, expand into full SASE.",desc:"SSE/SASE cloud security platform.",risk:"Cisco/Zscaler/Palo Alto squeeze. SBC. Path to profitability.",score:"B",stooqTicker:"ntsk.us",td:"NTSK"},
+  {n:38,co:"Firefly Aerospace",t:"FLY",ex:"Nasdaq",ipo:"2025-08-07",offer:45,price:60,mc:"$11B",sector:"Space/Defense",rev:"$160M",yoy:"+163%",gm:"-",profit:"Loss",ndr:"n/a",rule:"~100",gtm:"B2G",gtmDetail:"Direct government contracts (NASA, DoD, Space Force) for launch + lunar lander + spacecraft. SciTec acquisition for AI/data integration. Commercial launch services.",desc:"Launch + lunar lander + Dream Chaser spaceplane operator.",risk:"Launch cadence execution. Cash burn. Programme delays.",score:"C",stooqTicker:"fly.us",td:"FLY"},
+  {n:39,co:"Tata Capital",t:"TATACAP",ex:"NSE",ipo:"2025-10-13",offer:326,price:345,mc:"$18B",sector:"NBFC",rev:"₹30K Cr+",yoy:"+20%",gm:"-",profit:"Profitable",ndr:"n/a",rule:"n/a",gtm:"Channel/Partner",gtmDetail:"25+ lending products across SME, retail, corporate. Pan-India branch network + digital channels. Tata group cross-sell access.",desc:"Tata Group's diversified NBFC.",risk:"Credit quality cycle. RBI regulatory tightening. Asset quality.",score:"B",stooqTicker:null,td:"TATACAP.NSE"},
+  {n:40,co:"LG Electronics India",t:"LGEI",ex:"NSE",ipo:"2025-10-14",offer:1140,price:1650,mc:"$10B",sector:"Cons Electronics",rev:"₹24K Cr",yoy:"+10%",gm:"-",profit:"Profitable",ndr:"n/a",rule:"n/a",gtm:"Channel/Partner",gtmDetail:"Captive distribution + retail channel partners (Reliance Digital, Croma) + pan-India service network as differentiator.",desc:"LG Electronics' India consumer electronics arm.",risk:"Margin pressure from Chinese brands. FX. Royalty to parent.",score:"B",stooqTicker:null,td:"LGEI.NSE"},
+  {n:41,co:"LG CNS",t:"064400",ex:"KRX",ipo:"2025-02-05",offer:61900,price:65000,mc:"$4.3B",sector:"IT Services",rev:"$4.4B",yoy:"+6%",gm:"mid",profit:"GAAP+; ROE 17%",ndr:"n/a",rule:"n/a",gtm:"Direct Enterprise",gtmDetail:"Captive LG affiliate work as base + Korean enterprise/government direct sales. Vertical practices in finance, manufacturing, public sector. Hyperscaler partnerships.",desc:"LG Group's IT services arm: SI + cloud + AI.",risk:"Captive concentration. Wage inflation in Korean IT.",score:"B",stooqTicker:null,td:"064400.KRX"},
+  {n:42,co:"DN Solutions",t:"DN",ex:"KRX",ipo:"2025-05-15",offer:89700,price:100000,mc:"$4B",sector:"Machine Tools",rev:"KRW 2T",yoy:"+12%",gm:"-",profit:"EBITDA 22%",ndr:"n/a",rule:"~34",gtm:"Channel/Partner",gtmDetail:"Direct industrial sales + global distributor network in 100+ countries for CNC machine tools. Aftermarket service + parts as recurring revenue.",desc:"Korea's largest CNC machine tools maker (formerly Doosan Machine Tools).",risk:"Capex cyclicality. Chinese machine-tool competition.",score:"B",stooqTicker:null,td:"DN.KRX"},
+  {n:43,co:"SF Holding",t:"6936",ex:"HKEX",ipo:"2024-11-27",offer:34.30,price:50,mc:"$30B",sector:"Logistics",rev:"RMB 280B+",yoy:"+9%",gm:"improving",profit:"PAT +22%",ndr:"n/a",rule:"n/a",gtm:"Direct Enterprise",gtmDetail:"B2B enterprise contracts + B2C express delivery + Asia/international expansion. SF Pharma cold-chain vertical specialty. HK secondary listing for international capital.",desc:"China's largest integrated logistics company; A+H listing.",risk:"China consumer slowdown. Trade tensions. JD Logistics/Cainiao competition.",score:"B",stooqTicker:"6936.hk",td:"6936.HKEX"},
+  {n:44,co:"Midea Group",t:"0300",ex:"HKEX",ipo:"2024-09-17",offer:54.80,price:95,mc:"$95B",sector:"Appliances",rev:"RMB 407B",yoy:"+9%",gm:"-",profit:"PAT +14%",ndr:"n/a",rule:"n/a",gtm:"Channel/Partner",gtmDetail:"Multi-channel: own retail + B2C global (60+ countries) + KUKA B2B robotics + OEM/ODM for global brands. HK listing for international investor access.",desc:"Chinese appliance giant + KUKA industrial robotics.",risk:"Trade tensions. EU/US tariffs on Chinese appliances. Property cycle (real-estate-linked).",score:"B",stooqTicker:"0300.hk",td:"0300.HKEX"},
+  {n:45,co:"Black Sesame",t:"2533",ex:"HKEX",ipo:"2024-08-08",offer:28,price:22,mc:"$2B",sector:"Auto AI Chips",rev:"RMB 312M",yoy:"+100%",gm:"-",profit:"Loss",ndr:"n/a",rule:"~70",gtm:"OEM",gtmDetail:"Direct OEM design wins (Wudang, Huashan SoCs). Tencent/Xiaomi/Geely/NIO as strategic backers + early customers. China-domestic-substitute positioning.",desc:"Chinese auto AI SoC designer for ADAS/AD.",risk:"TSMC fabrication dependency. Horizon Robotics competition. Cash burn.",score:"C",stooqTicker:"2533.hk",td:"2533.HKEX"},
+  {n:46,co:"Cao Cao Mobility",t:"2643",ex:"HKEX",ipo:"2025-06-25",offer:41.94,price:30,mc:"$3B",sector:"Ride-hailing",rev:"RMB 14.7B",yoy:"+37%",gm:"-",profit:"Loss",ndr:"n/a",rule:"~32",gtm:"Channel/Partner",gtmDetail:"85% via aggregator partnerships (Alipay, Gaode/Amap) for distribution + B2C app + B2B fleet for B2B clients. Robotaxi pivot underway with Geely Zeekr.",desc:"Geely-backed China ride-hailing platform.",risk:"Regulatory. Didi/T3 competition. Aggregator dependence.",score:"C",stooqTicker:"2643.hk",td:"2643.HKEX"},
+  {n:47,co:"Bloks Group",t:"0325",ex:"HKEX",ipo:"2025-01-10",offer:60.35,price:120,mc:"$5B",sector:"Toys/IP",rev:"RMB 2B+",yoy:"+200%",gm:"mid",profit:"Loss → profit",ndr:"n/a",rule:"~210",gtm:"D2C",gtmDetail:"Mass-market China retail + e-commerce + IP-licensing-led product strategy (Ultraman, Marvel, DC, Sanrio). Collector economy + youth gifting drivers.",desc:"Assembly-character toys with major IP licenses.",risk:"IP renewal terms. Bandai/Lego competition. China consumer cycle.",score:"B",stooqTicker:"0325.hk",td:"0325.HKEX"},
+  {n:48,co:"Talabat",t:"TALABAT",ex:"DFM",ipo:"2024-12-10",offer:1.60,price:1.95,mc:"$11B",sector:"Food Delivery",rev:"$2.8B+",yoy:"+32%",gm:"-",profit:"Profitable",ndr:"n/a",rule:"~52",gtm:"Marketplace",gtmDetail:"B2C app + B2B restaurant/grocery partner platform across MENA. talabat Pro subscription drives frequency. Dark stores for Q-commerce. Profitable scale advantage vs. competitors.",desc:"MENA food delivery + grocery + fintech platform.",risk:"Delivery Hero parent overhang. Careem Food competition. Regional regulatory.",score:"A",stooqTicker:null,td:"TALABAT.DFM"},
+  {n:49,co:"eToro",t:"ETOR",ex:"Nasdaq",ipo:"2025-05-14",offer:52,price:35,mc:"$3B",sector:"Retail Broker",rev:"$13.7B gross",yoy:"+9%",gm:"low",profit:"Adj EBITDA+",ndr:"n/a",rule:"n/a",gtm:"D2C",gtmDetail:"D2C app + Copy Trading social moat as differentiated acquisition channel. Expanding into wealth management, neo-banking, AI agents.",desc:"Social-investing platform; multi-asset retail trading.",risk:"Crypto-volume sensitivity (96% revenue). Robinhood + Trading 212 competition.",score:"C",stooqTicker:"etor.us",td:"ETOR"},
+  {n:50,co:"Via Transportation",t:"VIA",ex:"NYSE",ipo:"2025-09-12",offer:46,price:18,mc:"$2B",sector:"Transit Tech",rev:"$434M",yoy:"+29%",gm:"improving",profit:"Loss narrowing",ndr:"n/a",rule:"~24",gtm:"B2G",gtmDetail:"Direct B2G sales to 700+ city/transit agencies. Multi-year SaaS + operations contracts in 30+ countries. Land with paratransit, expand to fixed-route + microtransit.",desc:"Public-transit software + operations platform.",risk:"Government procurement cycles. Budget cuts. Long sales cycles.",score:"C",stooqTicker:"via.us",td:"VIA"}
+];
+
+// =================================================================
+// LIVE FETCH LAYER
+// =================================================================
+const STATE = {
+  rows: [...DATA].map(d => ({ ...d, livePrice: null, liveStatus: 'static', liveTime: null, deltaPct: null })),
+  filtered: [],
+  sortKey: null,
+  sortDir: 'asc',
+  apiKey: null
+};
+
+// Load API key from localStorage (works on user's own GitHub Pages domain — not in Claude artifact sandbox)
+try { STATE.apiKey = localStorage.getItem('twelvedata_key') || null; } catch(e) { /* sandbox */ }
+
+async function fetchStooq(ticker) {
+  // Stooq returns CSV: Symbol,Date,Time,Open,High,Low,Close,Volume
+  const url = `https://stooq.com/q/l/?s=${ticker}&f=sd2t2ohlcv&h&e=csv`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('http ' + res.status);
+  const text = await res.text();
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) throw new Error('no data');
+  const cols = lines[1].split(',');
+  const close = parseFloat(cols[6]);
+  if (!isFinite(close) || close <= 0) throw new Error('no price (N/D)');
+  return { price: close, date: cols[1], time: cols[2] };
+}
+
+async function fetchTwelveData(symbol, key) {
+  const url = `https://api.twelvedata.com/price?symbol=${encodeURIComponent(symbol)}&apikey=${encodeURIComponent(key)}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('http ' + res.status);
+  const json = await res.json();
+  if (json.code && json.code >= 400) throw new Error(json.message || 'api error');
+  const price = parseFloat(json.price);
+  if (!isFinite(price) || price <= 0) throw new Error('no price');
+  return { price, date: new Date().toISOString().slice(0,10), time: new Date().toTimeString().slice(0,8) };
+}
+
+async function fetchOne(row) {
+  // Try Stooq first (no key)
+  if (row.stooqTicker) {
+    try {
+      const { price, date, time } = await fetchStooq(row.stooqTicker);
+      row.livePrice = price;
+      row.liveStatus = 'live';
+      row.liveTime = `${date} ${time}`;
+      row.deltaPct = ((price - row.offer) / row.offer * 100);
+      return;
+    } catch (e) { /* fall through */ }
+  }
+  // Try Twelve Data if API key present
+  if (STATE.apiKey && row.td) {
+    try {
+      const { price, date, time } = await fetchTwelveData(row.td, STATE.apiKey);
+      row.livePrice = price;
+      row.liveStatus = 'live';
+      row.liveTime = `${date} ${time}`;
+      row.deltaPct = ((price - row.offer) / row.offer * 100);
+      return;
+    } catch (e) { /* fall through */ }
+  }
+  // Fallback: keep baked
+  row.livePrice = row.price;
+  row.liveStatus = 'static';
+  row.deltaPct = ((row.price - row.offer) / row.offer * 100);
+}
+
+async function refreshAll() {
+  document.getElementById('live-status').textContent = 'Fetching live prices…';
+  const limit = 6;  // stagger to avoid rate limits
+  for (let i = 0; i < STATE.rows.length; i += limit) {
+    const batch = STATE.rows.slice(i, i + limit);
+    await Promise.all(batch.map(fetchOne));
+    applyFilters();
+  }
+  const liveCount = STATE.rows.filter(r => r.liveStatus === 'live').length;
+  document.getElementById('live-status').textContent = `${liveCount} of ${STATE.rows.length} live`;
+  document.getElementById('last-update').textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+}
+
+// =================================================================
+// RENDERING
+// =================================================================
+const COLS = [
+  { key: 'n', label: '#', w: 40 },
+  { key: 'co', label: 'Company', w: 170 },
+  { key: 't', label: 'Ticker', w: 80 },
+  { key: 'ex', label: 'Exch', w: 70 },
+  { key: 'ipo', label: 'IPO', w: 100 },
+  { key: 'sector', label: 'Sector', w: 140 },
+  { key: 'mc', label: 'Mkt Cap', w: 90 },
+  { key: 'livePrice', label: 'Price', w: 100 },
+  { key: 'deltaPct', label: 'vs Offer', w: 90 },
+  { key: 'rev', label: 'Rev TTM', w: 110 },
+  { key: 'yoy', label: 'YoY', w: 80 },
+  { key: 'gm', label: 'GM', w: 60 },
+  { key: 'gtm', label: 'GTM', w: 140 },
+  { key: 'score', label: 'Score', w: 70 }
+];
+
+function renderHeader() {
+  const tr = document.getElementById('thead-row');
+  tr.innerHTML = COLS.map(c => `<th data-key="${c.key}" style="min-width:${c.w}px">${c.label}</th>`).join('');
+  tr.querySelectorAll('th').forEach(th => th.addEventListener('click', () => sortBy(th.dataset.key)));
+}
+
+function fmtPrice(r) {
+  if (r.livePrice == null) return '—';
+  const sym = r.ex === 'NSE' || r.ex === 'BSE' ? '₹' : (r.ex === 'HKEX' ? 'HK$' : (r.ex === 'TSE' ? '¥' : (r.ex === 'KRX' ? '₩' : (r.ex === 'DFM' ? 'AED ' : '$'))));
+  const v = r.livePrice >= 1000 ? r.livePrice.toFixed(0) : r.livePrice.toFixed(2);
+  const badge = r.liveStatus === 'live'
+    ? '<span class="badge badge-live">live</span>'
+    : (r.liveStatus === 'static' ? '<span class="badge badge-static">cached</span>' : '<span class="badge badge-error">err</span>');
+  return `${sym}${v}${badge}`;
+}
+
+function fmtDelta(r) {
+  if (r.deltaPct == null) return '—';
+  const cls = r.deltaPct >= 0 ? 'delta-up' : 'delta-down';
+  const sign = r.deltaPct >= 0 ? '+' : '';
+  return `<span class="${cls}">${sign}${r.deltaPct.toFixed(0)}%</span>`;
+}
+
+function renderRow(r) {
+  const cells = COLS.map(c => {
+    let v = r[c.key];
+    if (c.key === 'livePrice') return `<td>${fmtPrice(r)}</td>`;
+    if (c.key === 'deltaPct') return `<td>${fmtDelta(r)}</td>`;
+    if (c.key === 'score') return `<td><span class="score score-${r.score}">${r.score}</span></td>`;
+    if (c.key === 'co') return `<td><strong>${v}</strong></td>`;
+    if (c.key === 'yoy') return `<td><span class="delta-up">${v}</span></td>`;
+    return `<td>${v ?? '—'}</td>`;
+  }).join('');
+  return `<tr data-n="${r.n}">${cells}</tr>`;
+}
+
+function renderDetailRow(r) {
+  return `<tr class="detail-row" data-detail="${r.n}"><td colspan="${COLS.length}">
+    <div class="detail-grid">
+      <div><div class="label">IPO date / offer</div><div class="value">${r.ipo} · ${r.offer}</div></div>
+      <div><div class="label">Current price</div><div class="value">${fmtPrice(r)} ${r.liveTime ? '<small style=color:var(--muted)>('+r.liveTime+')</small>' : ''}</div></div>
+      <div><div class="label">vs offer</div><div class="value">${fmtDelta(r)}</div></div>
+      <div><div class="label">Market cap</div><div class="value">${r.mc}</div></div>
+      <div><div class="label">Revenue TTM / YoY</div><div class="value">${r.rev} (<span class="delta-up">${r.yoy}</span>)</div></div>
+      <div><div class="label">Gross margin / Profit</div><div class="value">${r.gm} · ${r.profit}</div></div>
+      <div><div class="label">NDR / Rule of 40</div><div class="value">${r.ndr} · ${r.rule}</div></div>
+      <div><div class="label">Sector</div><div class="value">${r.sector}</div></div>
+      <div class="full"><div class="label">What they do</div><div class="value">${r.desc}</div></div>
+      <div class="full"><div class="label">Enterprise GTM motion (${r.gtm})</div><div class="value">${r.gtmDetail}</div></div>
+      <div class="full"><div class="label">Key risks</div><div class="value">${r.risk}</div></div>
+    </div>
+  </td></tr>`;
+}
+
+function renderTable() {
+  const tb = document.getElementById('tbody');
+  tb.innerHTML = STATE.filtered.map(renderRow).join('');
+  tb.querySelectorAll('tr').forEach(tr => {
+    tr.addEventListener('click', () => toggleDetail(tr));
+  });
+  document.getElementById('row-count').textContent = `${STATE.filtered.length} of ${STATE.rows.length} companies`;
+}
+
+function toggleDetail(tr) {
+  const n = tr.dataset.n;
+  const existing = document.querySelector(`tr[data-detail="${n}"]`);
+  document.querySelectorAll('tr.detail-row').forEach(d => d.remove());
+  document.querySelectorAll('tr.expanded').forEach(t => t.classList.remove('expanded'));
+  if (existing) return;
+  const row = STATE.filtered.find(r => r.n == n);
+  tr.classList.add('expanded');
+  tr.insertAdjacentHTML('afterend', renderDetailRow(row));
+}
+
+function applyFilters() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  const sec = document.getElementById('filter-sector').value;
+  const ex = document.getElementById('filter-exchange').value;
+  const gtm = document.getElementById('filter-gtm').value;
+  const sc = document.getElementById('filter-score').value;
+  STATE.filtered = STATE.rows.filter(r =>
+    (!q || r.co.toLowerCase().includes(q) || r.t.toLowerCase().includes(q)) &&
+    (!sec || r.sector === sec) &&
+    (!ex || r.ex === ex) &&
+    (!gtm || r.gtm === gtm) &&
+    (!sc || r.score === sc)
+  );
+  if (STATE.sortKey) doSort();
+  renderTable();
+}
+
+function sortBy(key) {
+  if (STATE.sortKey === key) STATE.sortDir = STATE.sortDir === 'asc' ? 'desc' : 'asc';
+  else { STATE.sortKey = key; STATE.sortDir = 'asc'; }
+  doSort();
+  document.querySelectorAll('th').forEach(th => {
+    th.classList.remove('sort-asc', 'sort-desc');
+    if (th.dataset.key === key) th.classList.add(STATE.sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+  });
+  renderTable();
+}
+
+function doSort() {
+  const k = STATE.sortKey, dir = STATE.sortDir === 'asc' ? 1 : -1;
+  STATE.filtered.sort((a, b) => {
+    let x = a[k], y = b[k];
+    if (typeof x === 'string') {
+      const xn = parseFloat(x.replace(/[^0-9.\-]/g, ''));
+      const yn = parseFloat(y.replace(/[^0-9.\-]/g, ''));
+      if (isFinite(xn) && isFinite(yn)) { x = xn; y = yn; }
+    }
+    if (x == null) return 1;
+    if (y == null) return -1;
+    return x < y ? -dir : x > y ? dir : 0;
+  });
+}
+
+function populateFilters() {
+  const sectors = [...new Set(STATE.rows.map(r => r.sector))].sort();
+  const exchs = [...new Set(STATE.rows.map(r => r.ex))].sort();
+  const gtms = [...new Set(STATE.rows.map(r => r.gtm))].sort();
+  sectors.forEach(s => document.getElementById('filter-sector').insertAdjacentHTML('beforeend', `<option>${s}</option>`));
+  exchs.forEach(e => document.getElementById('filter-exchange').insertAdjacentHTML('beforeend', `<option>${e}</option>`));
+  gtms.forEach(g => document.getElementById('filter-gtm').insertAdjacentHTML('beforeend', `<option>${g}</option>`));
+}
+
+// =================================================================
+// EVENT WIRING
+// =================================================================
+document.querySelectorAll('nav.tabs button[data-tab]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('nav.tabs button[data-tab]').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+['search', 'filter-sector', 'filter-exchange', 'filter-gtm', 'filter-score'].forEach(id => {
+  document.getElementById(id).addEventListener('input', applyFilters);
+});
+
+document.getElementById('refresh-btn').addEventListener('click', refreshAll);
+
+const modal = document.getElementById('settings-modal');
+document.getElementById('settings-btn').addEventListener('click', () => {
+  document.getElementById('api-key').value = STATE.apiKey || '';
+  modal.classList.add('open');
+});
+document.getElementById('settings-cancel').addEventListener('click', () => modal.classList.remove('open'));
+document.getElementById('settings-save').addEventListener('click', () => {
+  const v = document.getElementById('api-key').value.trim();
+  STATE.apiKey = v || null;
+  try { v ? localStorage.setItem('twelvedata_key', v) : localStorage.removeItem('twelvedata_key'); } catch(e){}
+  modal.classList.remove('open');
+  refreshAll();
+});
+modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+
+// =================================================================
+// INIT
+// =================================================================
+renderHeader();
+populateFilters();
+applyFilters();
+refreshAll();
+</script>
+
+</body>
+</html>
