@@ -6,7 +6,7 @@ import Seo from "../components/seo"
 const expertisePillars = [
   {
     title: "Generative AI & Multimodal Models",
-    desc: "Text-to-video, image-to-video, synthetic data generation. Building and evaluating production pipelines for foundational AI models.",
+    desc: "Text-to-video, image-to-video, agentic suite for creative platforms. Bridging gaps between creativity and AI solutions.",
   },
   {
     title: "Cloud Architecture & Data Pipelines",
@@ -22,24 +22,15 @@ const expertisePillars = [
   },
 ]
 
-const impactStats = [
-  { value: "100M+", label: "Synthetic assets pipeline capacity" },
-  { value: "12+", label: "GenAI PoCs delivered to executives" },
-  { value: "40%", label: "Data acquisition cost reduction" },
-  { value: "10+", label: "Years of SA experience" },
-]
-
 const IndexPage = () => {
   return (
     <Layout wide>
       <section className="hero">
-        <p className="hero-label">Solutions Architect</p>
         <h1 className="hero-title">
-          Turning deep ambiguity into scalable AI&nbsp;and cloud solutions
+          Hybrid AI solutions for Creative teams
         </h1>
         <p className="hero-subtitle">
-          I partner with research teams, design partners, and executives to architect
-          production-grade Generative AI systems for media, entertainment, and enterprise.
+          I focus on Applied AI Solution Architecture, in particular Agentic solutions for Media and Entertainment customers.
         </p>
         <div className="hero-cta">
           <a
@@ -63,18 +54,6 @@ const IndexPage = () => {
             <div key={p.title} className="pillar-card">
               <h3 className="pillar-title">{p.title}</h3>
               <p className="pillar-desc">{p.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="impact">
-        <h2 className="section-heading">Impact</h2>
-        <div className="impact-grid">
-          {impactStats.map((s) => (
-            <div key={s.label} className="impact-card">
-              <span className="impact-value">{s.value}</span>
-              <span className="impact-label">{s.label}</span>
             </div>
           ))}
         </div>
@@ -284,14 +263,18 @@ const IndexPage = () => {
 
 export const Head = () => (
   <Seo
-    title="Petr Leontev - Solutions Architect"
+    title="Petr Leontev - Applied AI Architect"
     keywords={[
       `solutions architect`,
+      `fde`,
+      `applied ai architect`,
+      `creative agents`,
       `generative ai`,
       `multimodal ai`,
       `cloud architecture`,
       `media and entertainment`,
       `technical strategy`,
+      `technical enablement`,
     ]}
   />
 )
