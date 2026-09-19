@@ -156,25 +156,6 @@ TypeSafe's docs suggest three bands, and they map well onto creative work, where
 
 Tuned well, this means the expensive LLM and the artist only see the cases that actually need them.
 
-**Where I would NOT use Jev**
-
-- **Generating anything.** Blueprint graphs, shader code, Python for Blender, descriptions, names. That's LLM work. Jev picks, scores and answers yes/no. It doesn't write.
-- **Aesthetic judgments on pixels.** It can't see. A rubric score on a text description of a render is only as good as that description.
-- **Math.** Budgets, bounds and distance checks belong in code. Don't ask a model whether 14,000 triangles is under 10,000.
-- **Pinned, reproducible pipelines where you can't send data out.** Jev is a closed, US-hosted API. There are no open weights and no on-prem option. For some studios and client NDAs that alone rules it out.
-
-**Be skeptical of the numbers, and test on your own workload**
-
-The headline claims (up to ~194x faster and ~445x cheaper) come from TypeSafe's own workflow evals. The reference answers in those evals are averaged judgments from GPT-6 Astra and Claude Fable 5.1, not human-labelled ground truth, and TypeSafe itself says the peak figures are "on the higher end". On their aggregate accuracy chart Jev is only narrowly ahead of GPT-5.6 Luna (67.8% vs 66.8%). Independent tests so far support the speed and cost story, but in one test a frontier LLM caught one more planted defect than Jev did (7 of 7 vs 6 of 7).
-
-None of those evals involve 3D or creative tasks. So this is how I'd adopt it:
-
-1. **Run it in shadow mode.** Let Jev answer next to your current LLM-based decisions, without acting on its answers, and log the full probability distributions.
-2. **Label right and wrong on your own traces** and tune your questions and thresholds on that data.
-3. **Automate the low-risk decisions first** (routing, asset ranking), then move on to guardrails and loop control.
-4. **Pin the model version** (`jev-1.13.0` rather than `jev-latest`) once you've tuned thresholds, and log the `model` field that comes back with every answer. A silent model upgrade can shift your calibration.
-5. **Plan for change.** It's early access, and rate limits (currently 1,200 requests/minute) and pricing are explicitly expected to move.
-
 **Conclusion**
 
 Using a frontier LLM for every small decision in an agent harness has always been wasteful. It's like calling a senior technical artist over to confirm that a file saved. Jev gives you fast, cheap, typed and calibrated answers for the "if statements" of a harness: routing, ranking, verification, guardrails and loop control. The LLM stays free for the planning and generation it's good at.
