@@ -50,7 +50,16 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   });
 }
 
-exports.onCreateNode = ({ node, actions, getNode }) => 
+// Posts without a category are treated as "3d" on the blog page.
+exports.createSchemaCustomization = ({ actions }) => {
+  actions.createTypes(`
+    type MdxFrontmatter {
+      category: String
+    }
+  `)
+}
+
+exports.onCreateNode =({ node, actions, getNode }) => 
 {
   const { createNodeField } = actions
 

@@ -24,7 +24,7 @@ const expertisePillars = [
 
 const IndexPage = () => {
   return (
-    <Layout wide>
+    <Layout>
       <section className="hero">
         <h1 className="hero-title">
           Hybrid AI solutions for Creative teams
