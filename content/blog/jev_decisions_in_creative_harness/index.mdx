@@ -1,0 +1,183 @@
+---
+title: Using Jev for decisions in agent harnesses for 3D and creative tasks
+date: 2026-09-19
+description: How TypeSafe AI's Jev, a non-generative "System One" model, can make the many small, typed decisions inside an AI harness that drives 3D and creative tools, and where it doesn't fit
+slug: /blog/jev_decisions_in_creative_harness
+---
+
+**Intro**
+
+If you've ever built an agent harness around a 3D tool (Unreal Engine, Blender, a DCC pipeline, anything with a scene graph and a pile of assets), you know the harness itself isn't the hard part. The hard part is the hundreds of small decisions it makes on every run:
+
+- Which tool should handle this request: mesh, material, lighting, animation, or level layout?
+- Is this candidate asset actually what the user asked for?
+- Did that step succeed, or should we retry?
+- Is the agent about to delete half the level? Should we stop it?
+- Is this run finished, or is the agent going in circles?
+
+Today most harnesses send every one of these to a frontier LLM. It asks the model to "reply with JSON", parses the reply, validates it, retries when the JSON is broken, and pays for all the reasoning tokens along the way. That's slow, expensive and fragile. It's the reason a "quick" scene edit can take a minute and burn a surprising amount of money.
+
+TypeSafe AI just released [Jev](https://docs.typesafe.ai/introduction), and I think it fits this problem well. This post covers what Jev is and how I'd wire it into a harness for 3D and creative work. It also covers where it doesn't fit, which is just as important.
+
+**What Jev is (and what it isn't)**
+
+Jev is the first model in a class TypeSafe calls *System One models*, named after Kahneman's fast, intuitive "System 1" thinking. It is **not** a chatbot and it does **not** generate text. You send it a block of state and a set of typed questions. It returns typed answers with probability distributions. Flavio Copes described it well: "Jev is a smart if statement."
+
+There are three question types:
+
+- **Choice**: pick one option from a list of up to 255. You get the choice, the full probability distribution and a `confidence` value.
+- **Score**: rate the state against ordered rubric levels. You get a probability-weighted score (it can land between levels), the distribution and a `confidence` value.
+- **Noul**: is this yes/no statement true? You get a probability between 0 and 1.
+
+The architecture is different from an LLM. Jev doesn't decode token by token. The set of possible outputs is fixed in advance, so it computes the distributions for *all* your questions in a single forward pass over a shared read of the state. TypeSafe calls the component a "parallel sampler". The model is trained with what they call Reinforcement Learning for Calibrated Decisions (RLCD), which optimises for calibration: an answer given 0.8 should be right about 80% of the time.
+
+This has a few practical consequences:
+
+1. **No parsing and no broken JSON.** Answers always match the schema. You can't get a type error back.
+2. **Output tokens are free.** There's no decode loop, so you only pay for input: $0.042 per million tokens at the time of writing.
+3. **Adding questions costs almost no latency.** TypeSafe reports 70–500 ms end to end, and asking 15 questions takes about as long as asking 1.
+4. **Every answer comes with a calibrated confidence.** This is the most important part for a harness, and I'll come back to it below.
+
+One caveat up front: "can't hallucinate" only means "can't answer outside the schema". Jev can still pick the *wrong* option from your list.
+
+**The System 1 / System 2 split in a creative harness**
+
+The way I think about it: the LLM (Claude, GPT, whatever you use) is **System 2**. It plans, writes code, produces Blueprint or Python for the DCC, and handles open-ended creative instructions. Jev is **System 1**. It makes the fast, frequent judgments that keep the loop running and turn into an `if`, a `match` or a `sort` in your harness code.
+
+TypeSafe's main design principle here is to *keep code in control*. Control flow, permissions and side effects (actually touching the scene) stay in deterministic code. Jev only fills in the judgment calls.
+
+**The big constraint: Jev only reads text**
+
+This matters a lot for 3D. Jev accepts text only: no images, audio, video or meshes. So Jev can't look at your viewport and tell you whether the lighting is moody enough.
+
+That sounds like a deal-breaker, but in practice a harness already has a lot of state in text form:
+
+- **The scene graph.** Actor names, classes, transforms, component lists, material assignments.
+- **Asset metadata.** Names, tags, paths, triangle counts, texture resolutions, LODs, license info.
+- **Engine output.** Compile results, validation warnings, profiler stats (draw calls, frame time, memory).
+- **The agent trace.** Which tools were called, with which arguments, and what came back.
+- **Descriptions of renders.** When you need a visual judgment, you can have a vision model write a short structured description of a render, then let Jev make decisions on that description.
+
+TypeSafe's docs make a point that matters a lot for scenes: accuracy drops as you add state that has nothing to do with the decision. Irrelevant detail distracts the model. **Don't dump a 20,000-actor level into the request.** Filter in code first and send only the fields the question needs. For example, send the selected actors and their materials, not the whole world outliner. The context limit is 64k tokens per request anyway (32k for state).
+
+**Where Jev fits in the harness loop**
+
+Here are the decision points where I'd use Jev, roughly in order of how much I'd trust it.
+
+*1. Intent routing (Choice)*
+
+The user types "make the warehouse feel like it's night and raining". Should that go to the lighting tool, the post-process/weather tool, the material tool, or a planning LLM because it spans several of them? It's a Choice over your tool list, plus an "other / needs planning" option, which TypeSafe recommends you always include. If confidence is high, route directly. If it's low, hand the request to the LLM planner.
+
+*2. Tool and asset selection (Choice, Score)*
+
+When the agent searches your content library for "rusty metal barrel", you get 40 candidates back. Score each one for relevance using its name, tags, path and triangle count, then sort. This is the "RAG passage filtering" pattern applied to assets. With an LLM this step is either too slow or gets skipped. With Jev it's cheap enough to run on every search.
+
+*3. Step verification (Noul)*
+
+After each tool call, ask questions like "Did this step do what was asked?", "Did compilation succeed without new errors?" and "Is the result within the performance budget?" against the tool output and the relevant scene diff. These are Noul questions. Your code decides what to do with each probability.
+
+*4. Guardrails before destructive actions (Noul + confidence gating)*
+
+This is where calibrated confidence pays off. Deleting actors, overwriting source assets, bulk-renaming, saving over a map: the harness should ask Jev something like "Does this action match the user's stated intent?" or "Could this action destroy work the user didn't ask to change?". Then gate the action on the answer, with **thresholds scaled to risk**. A read-only query can run at low confidence. A destructive write should need a very high probability. Anything in the middle gets a confirmation dialog for the artist.
+
+*5. Loop control (Noul, Choice)*
+
+Two questions every harness has to answer: "Is the task done?" and "Is the agent stuck repeating itself?". Both are yes/no judgments over the recent trace. Getting them wrong means either stopping too early or burning money in an infinite loop.
+
+*6. Reviewing runs (Score)*
+
+After a run, score the trace against a rubric: did it follow the art direction, did it respect naming conventions, did it stay in the requested part of the level. These scores are a good way to find bad runs in a large batch without reading every trace by hand.
+
+**Speculative fan-out: ask everything at once**
+
+Because questions are evaluated in parallel and in isolation, TypeSafe recommends a pattern called **speculative fan-out**: put every question you *might* need in one request, and let your code ignore the answers that don't apply. One of their cookbooks reports that batching 13 questions was about 12x cheaper and 10x faster than asking them one at a time.
+
+For a harness, this means one Jev call per loop iteration that answers routing, verification, guardrail and loop-control questions together. Here is a rough sketch. The field names follow the concepts in the docs (`state`, typed questions with `instructions` and `criteria`), but check the [API reference](https://docs.typesafe.ai/introduction) for the exact request shape before copying anything.
+
+```python
+import requests
+
+step_state = {
+    "user_request": "Replace the wooden crates near the loading dock with metal ones",
+    "last_tool_call": {"tool": "replace_actors", "args": {"filter": "SM_Crate_Wood*", "radius": 1500}},
+    "tool_result": {"replaced": 14, "errors": 0},
+    "scene_diff": ["-14 SM_Crate_Wood", "+14 SM_Crate_Metal", "-3 SM_Pallet_Wood"],
+    "next_planned_action": {"tool": "save_map", "args": {"map": "Warehouse_Main"}},
+}
+
+questions = {
+    "step_ok": {
+        "type": "noul",
+        "instructions": "The last tool call did what the user asked, without unrelated changes.",
+    },
+    "collateral_damage": {
+        "type": "noul",
+        "instructions": "The scene diff removes or changes objects the user did not ask to change.",
+    },
+    "next_move": {
+        "type": "choice",
+        "instructions": "What should the harness do next?",
+        "criteria": ["proceed", "undo_last_step", "ask_artist", "replan_with_llm"],
+    },
+}
+
+resp = requests.post(
+    "https://api.typesafe.ai/v1/systemone",
+    headers={"Authorization": f"Bearer {API_KEY}"},
+    json={"model": "jev-1.13.0", "state": step_state, "questions": questions},
+).json()
+```
+
+In this example the diff also removed three wooden pallets that nobody asked about, which is exactly what `collateral_damage` should catch *before* `save_map` runs. The harness code then makes the decision:
+
+```python
+answers = resp["answers"]
+
+if answers["collateral_damage"]["noul"] > 0.3:       # destructive path: low tolerance
+    pause_and_ask_artist(answers)
+elif answers["next_move"]["confidence"] < 0.5:       # model is unsure: escalate
+    replan_with_llm(step_state)
+elif answers["next_move"]["choice"] == "proceed" and answers["step_ok"]["noul"] > 0.9:
+    run(step_state["next_planned_action"])
+else:
+    handle(answers["next_move"]["choice"])
+```
+
+The model returns probabilities, and your code decides how cautious to be at each point. That's how "keep code in control" looks in practice.
+
+**The confidence bands pattern**
+
+TypeSafe's docs suggest three bands, and they map well onto creative work, where the "human in the loop" is an artist who doesn't want to be interrupted all the time:
+
+- **High confidence: act automatically.** Routing, asset ranking, non-destructive edits.
+- **Medium confidence: proceed carefully.** Apply the change but flag it in the review panel, or do it on a duplicate or a separate layer.
+- **Low confidence: don't act.** Escalate to the frontier LLM for a proper reasoning pass, or ask the artist.
+
+Tuned well, this means the expensive LLM and the artist only see the cases that actually need them.
+
+**Where I would NOT use Jev**
+
+- **Generating anything.** Blueprint graphs, shader code, Python for Blender, descriptions, names. That's LLM work. Jev picks, scores and answers yes/no. It doesn't write.
+- **Aesthetic judgments on pixels.** It can't see. A rubric score on a text description of a render is only as good as that description.
+- **Math.** Budgets, bounds and distance checks belong in code. Don't ask a model whether 14,000 triangles is under 10,000.
+- **Pinned, reproducible pipelines where you can't send data out.** Jev is a closed, US-hosted API. There are no open weights and no on-prem option. For some studios and client NDAs that alone rules it out.
+
+**Be skeptical of the numbers, and test on your own workload**
+
+The headline claims (up to ~194x faster and ~445x cheaper) come from TypeSafe's own workflow evals. The reference answers in those evals are averaged judgments from GPT-6 Astra and Claude Fable 5.1, not human-labelled ground truth, and TypeSafe itself says the peak figures are "on the higher end". On their aggregate accuracy chart Jev is only narrowly ahead of GPT-5.6 Luna (67.8% vs 66.8%). Independent tests so far support the speed and cost story, but in one test a frontier LLM caught one more planted defect than Jev did (7 of 7 vs 6 of 7).
+
+None of those evals involve 3D or creative tasks. So this is how I'd adopt it:
+
+1. **Run it in shadow mode.** Let Jev answer next to your current LLM-based decisions, without acting on its answers, and log the full probability distributions.
+2. **Label right and wrong on your own traces** and tune your questions and thresholds on that data.
+3. **Automate the low-risk decisions first** (routing, asset ranking), then move on to guardrails and loop control.
+4. **Pin the model version** (`jev-1.13.0` rather than `jev-latest`) once you've tuned thresholds, and log the `model` field that comes back with every answer. A silent model upgrade can shift your calibration.
+5. **Plan for change.** It's early access, and rate limits (currently 1,200 requests/minute) and pricing are explicitly expected to move.
+
+**Conclusion**
+
+Using a frontier LLM for every small decision in an agent harness has always been wasteful. It's like calling a senior technical artist over to confirm that a file saved. Jev gives you fast, cheap, typed and calibrated answers for the "if statements" of a harness: routing, ranking, verification, guardrails and loop control. The LLM stays free for the planning and generation it's good at.
+
+For 3D and creative work the text-only limitation is real, but it's manageable if you're disciplined about turning the scene into small, relevant text state. I'd start with a shadow-mode trial on your own harness traces. The decisions that end up gated by confidence rather than by an extra LLM call are where the speed and cost gains should show up.
+
+*Sources: [TypeSafe docs](https://docs.typesafe.ai/introduction) and launch materials, plus coverage from Forbes, SiliconANGLE, The Register, DataCamp, Every, OrcaRouter and DEV Community. Figures reflect TypeSafe's public materials as of September 2026.*
