@@ -76,9 +76,6 @@ const AboutPage = () => {
               GitHub
             </a>
           </li>
-          <li>
-            <span className="email">leontev dot petr at gmail dot com</span>
-          </li>
         </ul>
       </section>
 
