@@ -6,8 +6,8 @@ const recentContributions = [
   {
     title: "FilmAgent",
     role: "Solution Architect",
-    video: "/filmagent/deck/media/sizzle.mp4",
-    poster: "/filmagent/deck/media/sizzle.jpg",
+    // #t=0.1 makes browsers (incl. Safari) render the first frame as the preview
+    video: "/filmagent/deck/media/sizzle.mp4#t=0.1",
     desc: "Agentic co-pilot for filmmakers. Script, cast, locations, video takes, previz, storyboards and shot edits in one project, driven by chat.",
     points: [
       "Agent plans each request across 30 tools, up to 60 tool calls per request",
@@ -42,10 +42,9 @@ const IndexPage = () => {
               <video
                 className="contribution-video"
                 src={c.video}
-                poster={c.poster}
                 controls
                 playsInline
-                preload="none"
+                preload="metadata"
               />
             </div>
             <div className="contribution-body">
