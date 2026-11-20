@@ -1,24 +1,26 @@
 import React from "react"
-import { Link } from "gatsby"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
 
-const expertisePillars = [
+const recentContributions = [
   {
-    title: "Generative AI & Multimodal Models",
-    desc: "Text-to-video, image-to-video, agentic suite for creative platforms. Bridging gaps between creativity and AI solutions.",
-  },
-  {
-    title: "Cloud Architecture & Data Pipelines",
-    desc: "Designing scalable cloud-first systems capable of processing hundreds of millions of assets. Cost optimization and vendor strategy.",
-  },
-  {
-    title: "Technical Strategy & PoC Delivery",
-    desc: "Translating ambiguous business requirements into compelling prototypes. Technical validation for C-level decision makers.",
-  },
-  {
-    title: "Media & Entertainment",
-    desc: "Deep domain expertise across gaming, film, ads production, real-time 3D, and streaming technologies.",
+    title: "FilmAgent",
+    role: "Solution Architect",
+    image: "/filmagent/filmagent.jpg",
+    imageAlt: "FilmAgent: agent session on the left, generated film takes on the right",
+    desc: "Agentic co-pilot for filmmakers. Script, cast, locations, video takes, previz, storyboards and shot edits in one project, driven by chat.",
+    points: [
+      "Agent plans each request across 30 tools, up to 60 tool calls per request",
+      "Checks frames of every result before reporting; failed renders are reported, not silently retried",
+      "Video: Seedance 2.5, 5-30 s takes with sound, 480p drafts, 1080p finals",
+      "Images: Seedream 5.0 Pro, up to 4K and 10 references. Planner: Seed 2.1 Turbo",
+      "Next.js app, models on BytePlus ModelArk, projects and media in TOS storage",
+    ],
+    links: [
+      { label: "GitHub", href: "https://github.com/RaiaN/FilmAgent" },
+      { label: "One-pager (PDF)", href: "/filmagent/FilmAgent_OnePager.pdf" },
+      { label: "Deck (PDF)", href: "/filmagent/FilmAgent_Deck.pdf" },
+    ],
   },
 ]
 
@@ -26,122 +28,56 @@ const IndexPage = () => {
   return (
     <Layout>
       <section className="hero">
-        <h1 className="hero-title">
-          Hybrid AI solutions for Creative teams
-        </h1>
+        <h1 className="hero-title">Applied AI Architecture</h1>
         <p className="hero-subtitle">
-          I focus on Applied AI Solution Architecture, in particular Agentic solutions for Media and Entertainment customers.
+          How to take Generative AI and integrate it into real production.
         </p>
-        <div className="hero-cta">
-          <a
-            href="https://calendly.com/petr-leontev/30min"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-primary"
-          >
-            Let's talk
-          </a>
-          <Link to="/expertise" className="btn-secondary">
-            View expertise
-          </Link>
-        </div>
       </section>
 
-      <section className="pillars">
-        <h2 className="section-heading">What I Do</h2>
-        <div className="pillars-grid">
-          {expertisePillars.map((p) => (
-            <div key={p.title} className="pillar-card">
-              <h3 className="pillar-title">{p.title}</h3>
-              <p className="pillar-desc">{p.desc}</p>
+      <section className="contributions">
+        <h2 className="section-heading">Recent Contributions</h2>
+        {recentContributions.map((c) => (
+          <article key={c.title} className="contribution-card">
+            <a href={c.links[0].href} target="_blank" rel="noopener noreferrer" className="contribution-image-link">
+              <img src={c.image} alt={c.imageAlt} className="contribution-image" loading="lazy" />
+            </a>
+            <div className="contribution-body">
+              <h3 className="contribution-title">{c.title}</h3>
+              <p className="contribution-role">{c.role}</p>
+              <p className="contribution-desc">{c.desc}</p>
+              <ul className="contribution-points">
+                {c.points.map((p, i) => (
+                  <li key={i}>{p}</li>
+                ))}
+              </ul>
+              <div className="contribution-links">
+                {c.links.map((l) => (
+                  <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer">
+                    {l.label}
+                  </a>
+                ))}
+              </div>
             </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="cta-section">
-        <p className="cta-text">
-          Looking for a Solutions Architect who can bridge research and production?
-        </p>
-        <a
-          href="https://calendly.com/petr-leontev/30min"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-primary"
-        >
-          Schedule a conversation
-        </a>
+          </article>
+        ))}
       </section>
 
       <style jsx>{`
         .hero {
-          padding: 2rem 0 3rem;
-        }
-
-        .hero-label {
-          text-transform: uppercase;
-          letter-spacing: 0.12em;
-          font-size: 0.8rem;
-          color: #d35400;
-          font-weight: 600;
-          margin-bottom: 0.75rem;
+          padding: 2rem 0 1rem;
         }
 
         .hero-title {
           font-size: 2.4rem;
           line-height: 1.15;
-          margin-bottom: 1.25rem;
-          max-width: 680px;
+          margin-bottom: 1rem;
         }
 
         .hero-subtitle {
-          font-size: 1.1rem;
-          line-height: 1.65;
+          font-size: 1.15rem;
+          line-height: 1.6;
           color: #555;
-          max-width: 600px;
-          margin-bottom: 2rem;
-        }
-
-        .hero-cta {
-          display: flex;
-          gap: 1rem;
-          align-items: center;
-        }
-
-        .btn-primary {
-          display: inline-block;
-          background: #d35400;
-          color: #fff;
-          padding: 0.7rem 1.5rem;
-          border-radius: 6px;
-          font-size: 0.9rem;
-          font-weight: 600;
-          text-decoration: none;
-          box-shadow: none;
-          transition: background 0.2s ease;
-        }
-
-        .btn-primary:hover {
-          background: #b94800;
-          color: #fff;
-        }
-
-        .btn-secondary {
-          display: inline-block;
-          color: #d35400;
-          padding: 0.7rem 1.5rem;
-          border: 1.5px solid #d35400;
-          border-radius: 6px;
-          font-size: 0.9rem;
-          font-weight: 600;
-          text-decoration: none;
-          box-shadow: none;
-          transition: background 0.2s ease, color 0.2s ease;
-        }
-
-        .btn-secondary:hover {
-          background: #d35400;
-          color: #fff;
+          margin-bottom: 0;
         }
 
         .section-heading {
@@ -152,108 +88,95 @@ const IndexPage = () => {
           display: inline-block;
         }
 
-        .pillars {
-          padding: 2.5rem 0;
+        .contributions {
+          padding: 2rem 0;
         }
 
-        .pillars-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 1.5rem;
-        }
-
-        .pillar-card {
+        .contribution-card {
           background: #fff;
           border: 1px solid #e5e5e5;
           border-radius: 8px;
-          padding: 1.5rem;
+          overflow: hidden;
+          margin-bottom: 1.5rem;
           transition: box-shadow 0.2s ease, border-color 0.2s ease;
         }
 
-        .pillar-card:hover {
+        .contribution-card:hover {
           border-color: #d35400;
           box-shadow: 0 2px 12px rgba(211, 84, 0, 0.08);
         }
 
-        .pillar-title {
-          font-size: 1.05rem;
-          margin-bottom: 0.5rem;
-          margin-top: 0;
+        .contribution-image-link {
+          display: block;
+          box-shadow: none;
+          border-bottom: 1px solid #e5e5e5;
         }
 
-        .pillar-desc {
+        .contribution-image {
+          display: block;
+          width: 100%;
+          height: auto;
+          margin: 0;
+        }
+
+        .contribution-body {
+          padding: 1.5rem;
+        }
+
+        .contribution-title {
+          font-size: 1.2rem;
+          margin: 0 0 0.25rem;
+        }
+
+        .contribution-role {
+          font-size: 0.8rem;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          color: #d35400;
+          font-weight: 600;
+          margin-bottom: 0.75rem;
+        }
+
+        .contribution-desc {
+          font-size: 0.95rem;
+          color: #444;
+          line-height: 1.6;
+          margin-bottom: 0.75rem;
+        }
+
+        .contribution-points {
+          list-style: none;
+          margin: 0 0 1rem;
+          padding: 0;
+        }
+
+        .contribution-points li {
+          position: relative;
+          padding-left: 1.25rem;
+          margin-bottom: 0.4rem;
           font-size: 0.9rem;
           color: #555;
-          line-height: 1.55;
-          margin-bottom: 0;
+          line-height: 1.5;
         }
 
-        .impact {
-          padding: 2.5rem 0;
-        }
-
-        .impact-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 1.5rem;
-        }
-
-        .impact-card {
-          text-align: center;
-          padding: 1.25rem 0.75rem;
-          background: #fff;
-          border: 1px solid #e5e5e5;
-          border-radius: 8px;
-        }
-
-        .impact-value {
-          display: block;
-          font-size: 2rem;
-          font-weight: 700;
+        .contribution-points li::before {
+          content: "-";
+          position: absolute;
+          left: 0;
           color: #d35400;
-          margin-bottom: 0.25rem;
         }
 
-        .impact-label {
-          display: block;
-          font-size: 0.8rem;
-          color: #666;
-          line-height: 1.35;
-        }
-
-        .cta-section {
-          text-align: center;
-          padding: 3rem 0 1rem;
-        }
-
-        .cta-text {
-          font-size: 1.15rem;
-          color: #333;
-          margin-bottom: 1.25rem;
+        .contribution-links {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1.25rem;
+          font-size: 0.9rem;
+          font-weight: 600;
         }
 
         @media (max-width: 700px) {
           .hero-title {
             font-size: 1.8rem;
-          }
-
-          .pillars-grid {
-            grid-template-columns: 1fr;
-          }
-
-          .impact-grid {
-            grid-template-columns: 1fr 1fr;
-          }
-
-          .hero-cta {
-            flex-direction: column;
-            align-items: flex-start;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .impact-grid {
-            grid-template-columns: 1fr;
           }
         }
       `}</style>
@@ -263,18 +186,14 @@ const IndexPage = () => {
 
 export const Head = () => (
   <Seo
-    title="Petr Leontev - Applied AI Architect"
+    title="Applied AI Architecture"
     keywords={[
+      `applied ai architecture`,
       `solutions architect`,
-      `fde`,
-      `applied ai architect`,
-      `creative agents`,
       `generative ai`,
-      `multimodal ai`,
-      `cloud architecture`,
+      `ai agents`,
+      `filmagent`,
       `media and entertainment`,
-      `technical strategy`,
-      `technical enablement`,
     ]}
   />
 )

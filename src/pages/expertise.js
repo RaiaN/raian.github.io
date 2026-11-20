@@ -12,6 +12,7 @@ const sections = [
     highlights: [
       "Architected synthetic data generation pipelines capable of producing 100M+ assets",
       "Reduced reliance on third-party data and lowered acquisition costs by up to 40%",
+      "Architected FilmAgent, an agentic AI co-pilot for filmmakers covering screenwriting, asset and video generation, previz and shot editing (github.com/RaiaN/FilmAgent)",
       "Partnered with research teams and design partners to deliver 12+ GenAI-focused PoCs and Proofs of Value",
       "Provided technical validation that accelerated strategic decisions by C-level stakeholders",
     ],
