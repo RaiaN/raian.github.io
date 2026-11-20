@@ -8,7 +8,6 @@ import favicon from "../../favicon.png"
 const Layout = ({ children, wide }) => {
   const navLinks = [
     { to: "/", label: "Home" },
-    { to: "/expertise", label: "Expertise" },
     { to: "/blog", label: "Blog" },
     { to: "/about", label: "About" },
   ]
