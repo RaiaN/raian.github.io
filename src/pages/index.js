@@ -6,8 +6,8 @@ const recentContributions = [
   {
     title: "FilmAgent",
     role: "Solution Architect",
-    image: "/filmagent/filmagent.jpg",
-    imageAlt: "FilmAgent: agent session on the left, generated film takes on the right",
+    video: "/filmagent/deck/media/sizzle.mp4",
+    poster: "/filmagent/deck/media/sizzle.jpg",
     desc: "Agentic co-pilot for filmmakers. Script, cast, locations, video takes, previz, storyboards and shot edits in one project, driven by chat.",
     points: [
       "Agent plans each request across 30 tools, up to 60 tool calls per request",
@@ -19,8 +19,7 @@ const recentContributions = [
     links: [
       { label: "GitHub", href: "https://github.com/RaiaN/FilmAgent" },
       { label: "Deck", href: "/filmagent/deck/" },
-      { label: "One-pager (PDF)", href: "/filmagent/FilmAgent_OnePager.pdf" },
-      { label: "Deck (PDF)", href: "/filmagent/FilmAgent_Deck.pdf" },
+      { label: "One-pager", href: "/filmagent/deck/media/FilmAgent_OnePager.html" },
     ],
   },
 ]
@@ -39,9 +38,16 @@ const IndexPage = () => {
         <h2 className="section-heading">Recent Contributions</h2>
         {recentContributions.map((c) => (
           <article key={c.title} className="contribution-card">
-            <a href={c.links[0].href} target="_blank" rel="noopener noreferrer" className="contribution-image-link">
-              <img src={c.image} alt={c.imageAlt} className="contribution-image" loading="lazy" />
-            </a>
+            <div className="contribution-media">
+              <video
+                className="contribution-video"
+                src={c.video}
+                poster={c.poster}
+                controls
+                playsInline
+                preload="none"
+              />
+            </div>
             <div className="contribution-body">
               <h3 className="contribution-title">{c.title}</h3>
               <p className="contribution-role">{c.role}</p>
@@ -107,17 +113,16 @@ const IndexPage = () => {
           box-shadow: 0 2px 12px rgba(211, 84, 0, 0.08);
         }
 
-        .contribution-image-link {
-          display: block;
-          box-shadow: none;
+        .contribution-media {
+          background: #0e0f12;
           border-bottom: 1px solid #e5e5e5;
         }
 
-        .contribution-image {
+        .contribution-video {
           display: block;
           width: 100%;
-          height: auto;
-          margin: 0;
+          aspect-ratio: 16 / 9;
+          background: #0e0f12;
         }
 
         .contribution-body {
