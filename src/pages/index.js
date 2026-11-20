@@ -18,6 +18,7 @@ const recentContributions = [
     ],
     links: [
       { label: "GitHub", href: "https://github.com/RaiaN/FilmAgent" },
+      { label: "Deck", href: "/filmagent/deck/" },
       { label: "One-pager (PDF)", href: "/filmagent/FilmAgent_OnePager.pdf" },
       { label: "Deck (PDF)", href: "/filmagent/FilmAgent_Deck.pdf" },
     ],
